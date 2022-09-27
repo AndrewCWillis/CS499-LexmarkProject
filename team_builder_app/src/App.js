@@ -1,16 +1,21 @@
-import Button from 'react-bootstrap/Button';
-// import Container from 'react-bootstrap/Container'
-// import Row from 'react-bootstrap/Row'
-// import Col from 'react-bootstrap/Col'
-import Stack from 'react-bootstrap/Stack';
+import {
+  Routes,
+  Route
+} from "react-router-dom";
+//https://v5.reactrouter.com/web/guides/quick-start#:~:text=1st%20Example%3A%20Basic%20Routing
+
+import Build from './pages/Build';
+import Input from './pages/Input';
+import Home from './pages/Home';
 
 const App = () => {
   return (
-    // Syling: https://stackoverflow.com/questions/41265182/vertical-alignment-in-bootstrap-4#:~:text=1%20%2D%20Vertical%20Center%20Using%20Auto%20Margins
-    <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto my-auto h-100">
-      <Button className="mx-auto my-auto" variant="primary">Input Data</Button>
-      <Button className="mx-auto my-auto" variant="primary">Build a Team</Button>
-    </Stack>
+    // https://stackoverflow.com/questions/70589529/react-router-v6-not-rendering#:~:text=)%20%7B%0A%20%20%20%20return%20(-,%3CRoutes%3E%0A%20%20%20%20%20%20%20%20%3CRoute%20path%3D%22/%22%20element%3D%7B%3CHome%20/%3E%7D%20/%3E%0A%20%20%20%20%20%20%20%20%3CRoute%20path%3D%22/details%22%20element%3D%7B%3CDetails%20/%3E%7D%20/%3E%0A%20%20%20%20%20%20%20%20%3CRoute%20path%3D%22/contact%22%20element%3D%7B%3CContact%20/%3E%7D%20/%3E%0A%20%20%20%20%20%20%3C/Routes%3E,-)%3B%0A%20%20%7D%0A%7D
+    <Routes>
+      <Route path="/input" element={<Input />} />
+      <Route path="/build" element={<Build />} />
+      <Route path="/" element={<Home />} />
+    </Routes>
   );
 }
 
