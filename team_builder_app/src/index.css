@@ -1,3 +1,4 @@
+/* https://stackoverflow.com/questions/46769706/css-100-height-not-working-in-react-app#:~:text=30,get%20height%3A%20100%25 */
 #root, body, html {
     height: 100%;
 }
