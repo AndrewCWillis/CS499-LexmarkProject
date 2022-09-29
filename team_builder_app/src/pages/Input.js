@@ -1,7 +1,8 @@
+
 const Input = () => {
     return (
         <h1>
-            Input
+            Input Data
         </h1>
     ) 
 }
