@@ -1,4 +1,3 @@
-import Stack from 'react-bootstrap/Stack';
 import Button from 'react-bootstrap/Button';
 import React, { Component } from 'react';
 import TeamMember from './TeamMember.js'
@@ -17,7 +16,7 @@ class TeamSize extends Component {
         if (isNaN(event.target.value)){
 
             event.target.className = "form-control is-invalid"
-            document.getElementById("ErrorMessage").className = "invalid-feedback visible"
+            document.getElementById("ErrorMessage").className = "text-danger visible"
 
         }else{
             if (event.target.value > 0){
@@ -26,10 +25,10 @@ class TeamSize extends Component {
                     num : 0
                   });
                 event.target.className = "form-control is-valid"
-                document.getElementById("ErrorMessage").className = "invalid-feedback invisible"
+                document.getElementById("ErrorMessage").className = "text-danger invisible"
             }else{
                 event.target.className = "form-control is-invalid"
-                document.getElementById("ErrorMessage").className = "invalid-feedback visible"
+                document.getElementById("ErrorMessage").className = "text-danger visible"
             }
         }
 
@@ -54,27 +53,26 @@ class TeamSize extends Component {
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
             var amt = this.state.num
-            return(
-                <>
-                    <Stack direction='horizontal' className="mx-auto my-auto">
-                    {Array.from({length:amt}, (_, i) => {return(<div key = {i} className="p-5 ml-2 mr-2 bg-secondary text-white"><TeamMember key = {i} /></div>);})}
-                    </Stack>
-                </>
-            );
+            return(<TeamMember key = {0} />);
         }else{
             return(
-                <>
-                    <form>
-                        <label className = "form-label">
-                            Please, Enter the Number of Employees For Your Team
-                        </label>
-                        <Stack direction='horizontal' className="col-md-5 mx-auto my-auto h-100">
-                            <input type="text"  id="teamSize" onChange = {this.handleChange} className ="form-control"></input>
-                            <Button  onClick = {this.handleClick} variant="primary" href='/build'>Build</Button>
-                            <div className="invalid-feedback invisible" id="ErrorMessage">Please, insert a postive number.</div>
-                        </Stack>
-                    </form>
-                </>
+                <form>
+                    <div className="container">
+                    <label className = "form-group control-label" htmlFor="teamSize">
+                        Please, Enter the Number of Employees For Your Team:
+                    </label>
+                    <div className="form-group row">
+                        <div className = "row">
+                            <div className="col">       
+                                <input type="text"  id="teamSize" onChange = {this.handleChange} className ="form-control input-sm"></input>
+                            </div>
+                            <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button>
+                        </div>
+                    </div>  
+                    <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>
+                    </div>     
+                        
+                </form>
             );
         }
     }

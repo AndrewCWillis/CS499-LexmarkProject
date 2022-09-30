@@ -6,18 +6,21 @@ class TeamMember extends Component {
 
       }
     render(){
+        
         return(
         <>
             <form>
-                <div className = "form-label">
-                    Please, Enter the Desired Technical Skills for this Position
-                </div>
-                <input type="text"  id="teamSize" onChange = {this.handleChange} className =" m-3 form-control"></input>
-                    
+                <div className="container">
+                    <div className = "form-label">
+                    Please, Enter the Desired Technical Skills for this Position:
+                    </div>
+                    {<CheckList />}
+                </div>    
             </form>
-            {Array.from({length:6}, (_, i) => {return(<CheckList key = {i} />);})}
+            
         </>
         );
     }
 }
+
 export default TeamMember;
