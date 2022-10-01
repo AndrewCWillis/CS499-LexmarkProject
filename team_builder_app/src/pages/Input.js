@@ -1,9 +1,10 @@
+import InputPerson from "../components/InputPerson";
 
 const Input = () => {
     return (
-        <h1>
-            Input Data
-        </h1>
+        <div className="col-md-5 mx-auto my-auto h-100">
+            <InputPerson />
+        </div>
     ) 
 }
 
