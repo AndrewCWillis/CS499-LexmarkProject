@@ -23,22 +23,44 @@ const InputPerson = () => {
             var firstN = document.getElementById('formFirstName').value;
             var lastN = document.getElementById('formLastName').value;
 
+            var regexForLetters = /^[A-Za-z]+$/;
+            var isFirstValid = regexForLetters.test(firstN);
+            var isLastValid = regexForLetters.test(lastN);
+
             //https://stackoverflow.com/questions/23476532/check-if-string-contains-only-letters-in-javascript
-            if (/^[A-Za-z]+$/.test(firstN) && /^[A-Za-z]+$/.test(lastN)) {
+            // If first and last name are valid
+            if (isFirstValid && isLastValid) {
                 setPerson({...person, firstName: firstN, lastName: lastN});
-            } else {
-                console.log("error")
+                document.getElementById("ErrorMessage").className = "text-danger invisible";
+                document.getElementById("formFirstName").className = "form-control is-valid";
+                document.getElementById("formLastName").className = "form-control is-valid";
+
+                setIsOnName(false);
+                setIsOnSkills(true);
+            } else if (!isFirstValid && isLastValid) { // if the first name is invalid
+                console.log("first");
+                document.getElementById("formFirstName").className = "form-control is-invalid";
+                document.getElementById("formLastName").className = "form-control is-valid";
+                document.getElementById("ErrorMessage").className = "text-danger visible";
+            } else if (!isLastValid && isFirstValid) { // if the last name is invalid
+                document.getElementById("formFirstName").className = "form-control is-valid";
+                document.getElementById("formLastName").className = "form-control is-invalid";
+                document.getElementById("ErrorMessage").className = "text-danger visible";
+            } else { // if first and last name are invalid
+                document.getElementById("formFirstName").className = "form-control is-invalid";
+                document.getElementById("formLastName").className = "form-control is-invalid";
+                document.getElementById("ErrorMessage").className = "text-danger visible";
             }
         }
 
         // https://react-bootstrap.github.io/forms/overview/#overview
         return (
             <Form className="mx-auto my-auto h-100">
-                <Form.Group className='mb-3' controlId='formFirstName'>
+                <Form.Group className='mb-3' controlId='formFirstName' >
                     <Form.Label>First Name</Form.Label>
                     <Form.Control placeholder='Enter first name' />
                 </Form.Group>
-                <Form.Group className='mb-3' controlId='formLastName'>
+                <Form.Group className='mb-3' controlId='formLastName' >
                     <Form.Label>Last Name</Form.Label>
                     <Form.Control placeholder='Enter last name' />
                 </Form.Group>
@@ -46,6 +68,7 @@ const InputPerson = () => {
                     <Button disabled={true}>Back</Button>
                     <Button onClick={HandleNameInput}>Continue</Button>
                 </Stack>
+                <div className="text-danger invisible" id="ErrorMessage">Please, input letters in the above boxes.</div>
             </Form>
         );
     }
