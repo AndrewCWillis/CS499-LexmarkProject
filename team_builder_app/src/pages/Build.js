@@ -1,9 +1,10 @@
+import ReactDOM from 'react-dom/client';
+import TeamSize from './../TeamSize.js'
 const Build = () => {
-    return (
-        <h1>
-            Build
-        </h1>
-    ) 
+    
+    return(
+        <TeamSize />
+    );
 }
 
 export default Build;
