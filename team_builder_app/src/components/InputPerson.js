@@ -23,12 +23,12 @@ const InputPerson = () => {
             var firstN = document.getElementById('formFirstName').value;
             var lastN = document.getElementById('formLastName').value;
 
-            var regexForLetters = /^[A-Za-z]+$/;
+            var regexForLetters = /^[A-Za-z]+$/;  //https://stackoverflow.com/questions/23476532/check-if-string-contains-only-letters-in-javascript
             var isFirstValid = regexForLetters.test(firstN);
             var isLastValid = regexForLetters.test(lastN);
 
-            //https://stackoverflow.com/questions/23476532/check-if-string-contains-only-letters-in-javascript
-            // If first and last name are valid
+            
+            // If first and last name are valid, move on to inputting skills
             if (isFirstValid && isLastValid) {
                 setPerson({...person, firstName: firstN, lastName: lastN});
                 document.getElementById("ErrorMessage").className = "text-danger invisible";
@@ -37,16 +37,16 @@ const InputPerson = () => {
 
                 setIsOnName(false);
                 setIsOnSkills(true);
-            } else if (!isFirstValid && isLastValid) { // if the first name is invalid
+            } else if (!isFirstValid && isLastValid) { // if the first name is invalid, mark it as such
                 console.log("first");
                 document.getElementById("formFirstName").className = "form-control is-invalid";
                 document.getElementById("formLastName").className = "form-control is-valid";
                 document.getElementById("ErrorMessage").className = "text-danger visible";
-            } else if (!isLastValid && isFirstValid) { // if the last name is invalid
+            } else if (!isLastValid && isFirstValid) { // if the last name is invalid, mark it as such
                 document.getElementById("formFirstName").className = "form-control is-valid";
                 document.getElementById("formLastName").className = "form-control is-invalid";
                 document.getElementById("ErrorMessage").className = "text-danger visible";
-            } else { // if first and last name are invalid
+            } else { // if first and last name are invalid, mark them as such
                 document.getElementById("formFirstName").className = "form-control is-invalid";
                 document.getElementById("formLastName").className = "form-control is-invalid";
                 document.getElementById("ErrorMessage").className = "text-danger visible";
@@ -78,9 +78,8 @@ const InputPerson = () => {
             <CheckList></CheckList>
         );
     }
-
+    
     if (isOnName) {
-        console.log(person);
         return (<Name />);
     } else if (isOnSkills) {
         return (<Skills />);
