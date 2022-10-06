@@ -38,7 +38,6 @@ const InputPerson = () => {
                 setIsOnName(false);
                 setIsOnSkills(true);
             } else if (!isFirstValid && isLastValid) { // if the first name is invalid, mark it as such
-                console.log("first");
                 document.getElementById("formFirstName").className = "form-control is-invalid";
                 document.getElementById("formLastName").className = "form-control is-valid";
                 document.getElementById("ErrorMessage").className = "text-danger visible";
@@ -74,11 +73,22 @@ const InputPerson = () => {
     }
 
     const Skills = () => {
+        const HandleSkillsInput = () => {
+
+        }
         return (
-            <CheckList></CheckList>
+            <Stack gap={2} className="h-100">
+                <CheckList></CheckList>
+                <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                    <Button>Back</Button>
+                    <Button onClick={HandleSkillsInput}>Continue</Button>
+                </Stack>
+                
+            </Stack>
+
         );
     }
-    
+
     if (isOnName) {
         return (<Name />);
     } else if (isOnSkills) {
