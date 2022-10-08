@@ -1,5 +1,4 @@
-import ReactDOM from 'react-dom/client';
-import TeamSize from './../TeamSize.js'
+import TeamSize from '../components/TeamSize.js'
 const Build = () => {
     
     return(
