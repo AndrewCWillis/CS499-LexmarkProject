@@ -40,7 +40,6 @@ DEV LOG
         serializer.py
             Serializes the Employee model to native Python datatypes (Might not be necessary?)
         views.py 
-            -Added a basic view displaying HTML output
             -Added a class for React REST API 
         urls.py
             Creating a URLconf for views in the APP 
