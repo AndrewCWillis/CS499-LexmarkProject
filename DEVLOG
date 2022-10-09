@@ -22,8 +22,7 @@ Create a Django Project [gallupBP]
     Django PROJECTS are the larger-level unit
     Django APPLICATIONS are are the lower-level unit
     A Django PROJECT can have many Django APPLICATIONS
-    > django-admin startproject team_builder_django
-        The . prevents a subfolder from being created, just for organizational preference / simplicity
+    > django-admin startproject team_builder_djangoed
 
 Start a Django App
     Django APP folder will be where most of of the development occurs
@@ -59,7 +58,7 @@ DEV LOG
             Add new variable CORS_ORIGIN_ALLOW_ALL = True
             Set TIMEZONE to 'America/Chicago' (from UTC)
     <console>
-        Created superuser USER: admin EMAIL: admin@uky.not PW: foo
+        Created superuser USER: admin EMAIL: admin@499.com PW: 499
 
 REFERENCES
 Setup Tutorial    
