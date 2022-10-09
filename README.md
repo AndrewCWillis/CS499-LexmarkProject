@@ -2,31 +2,37 @@
 Senior Design Project. Lexmark Gallup BP10 Team Builder Web Application.
 
 # Files
-React Frontend                  team_builder_react
-Django Backend                  team_builder_django
-Python Virtual Environment      py_venv
+React Frontend: `team_builder_react`
+
+Django Backend: `team_builder_django`
+
+Python Virtual Environment: `py_venv`
 
 # Starting Django
-Activate the Django Virtual Environment
-    (Windows)
-        > py_venv\Scripts\activate
-        To exit python virtual environment
-        > deactivate
-Run the Django Server
+Before the Django server is started, the Python virtual environment must be activated. 
+
+    py_venv\Scripts\activate
+
+To exit python virtual environment `deactivate`
+
+### Run the Django Server
+Open a terminal in the team_builder_django directory (manage.py should be in the root), and execute this command;
+
     python manage.py runserver
+    
+This will run the Django server on the default settings of `127.0.0.0:0000`. This can be changed by appending parameters to the end of the command:
+    
+    python manage.py runserver 8080
+    python manage.py runserver 0.0.0.0:8000
 
-Run the React Server (?)
-    > cd team_builder_react
-    > npm start
-    ERRO: 'react-scripts' is not recognized as an internal or external command ?
-    > npm install react-scripts --save
+# Starting React
+Open a new terminal in the team_builder_react directory and call the following command
+    npm start
 
+If you receive an error `'react-scripts' is not recognized as an internal or external command`, you can fix this via
+    
+    npm install react-scripts --save
 # Colaboration
-Adding Python Libraries & Dependencies
-    Make sure the py_venv is activated
-        1   python -m pip install <>
-        2   python -m pip freeze > py_requirements.txt
+### Adding Python Libraries & Dependencies
 
-
-npm install react-scripts --save
-npm install axios
+Make sure the `py_venv` is activated, then use `python -m pip install <dependency_name>` to install your library. Finally update the `py_requirements` file, using `python -m pip freeze > py_requirements.txt`
