@@ -22,7 +22,7 @@ Create a Django Project [gallupBP]
     Django PROJECTS are the larger-level unit
     Django APPLICATIONS are are the lower-level unit
     A Django PROJECT can have many Django APPLICATIONS
-    > django-admin startproject team_builder_django .
+    > django-admin startproject team_builder_django
         The . prevents a subfolder from being created, just for organizational preference / simplicity
 
 Start a Django App
@@ -41,12 +41,22 @@ DEV LOG
             Serializes the Employee model to native Python datatypes (Might not be necessary?)
         views.py 
             -Added a class for React REST API 
-        urls.py
-            Creating a URLconf for views in the APP 
-    gallupBP
+        ? urls.py
+        ?    Creating a URLconf for views in the APP 
+
+    team_builder_django
         urls.py
             Added a path() to include() gallupBPAPP.urls
-        settings.py   
+        settings.py
+            Add to INSTALLED APPS   
+                'rest_framework', 
+                'core', 
+                'corsheaders'
+            Add to MIDDLEWARE
+                'corsheaders.middleware.CorsMiddleware'
+            Add new dictionary REST_FRAMEWORK{}
+                'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
+            Add new variable CORS_ORIGIN_ALLOW_ALL = True
             Set TIMEZONE to 'America/Chicago' (from UTC)
     <console>
         Created superuser USER: admin EMAIL: admin@uky.not PW: foo
