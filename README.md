@@ -26,3 +26,7 @@ Adding Python Libraries & Dependencies
     Make sure the py_venv is activated
         1   python -m pip install <>
         2   python -m pip freeze > py_requirements.txt
+
+
+npm install react-scripts --save
+npm install axios
