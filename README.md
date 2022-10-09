@@ -27,11 +27,13 @@ This will run the Django server on the default settings of `127.0.0.0:0000`. Thi
 
 # Starting React
 Open a new terminal in the team_builder_react directory and call the following command
+
     npm start
 
 If you receive an error `'react-scripts' is not recognized as an internal or external command`, you can fix this via
     
     npm install react-scripts --save
+    
 # Colaboration
 ### Adding Python Libraries & Dependencies
 
