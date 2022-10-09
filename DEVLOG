@@ -32,7 +32,7 @@ Start a Django App
     > django-admin startapp core
 
 DEV LOG
-    gallupBPAPP (core)
+    core
         admin.py
             Registered Employee as having an admin interface
         models.py  
