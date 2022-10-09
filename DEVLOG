@@ -1,0 +1,129 @@
+SETUP
+Created virtual environment [djangoEnv]
+    > python -m venv djangoEnv
+
+Activate virtual environment
+    > djangoEnv\Scripts\activate
+        WINDOWS SPECIFIC
+            Scripts disabled on my system
+            Windows Powershell Command (Running as Administrator)
+                $ Set-ExecutionPolicy -ExecutionPolicy Unrestricted
+                https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-7.2
+        Allow the activate script execute
+
+Install Django and Pin Our Dependencies
+    > python -m pip install django
+    > python -m pip install djangorestframework
+    > python -m pip install django-cors-headers
+    > python -m pip freeze > py_requirements.txt
+        Pin the dependencies & django version into requirements.txt
+
+Create a Django Project [gallupBP]
+    Django PROJECTS are the larger-level unit
+    Django APPLICATIONS are are the lower-level unit
+    A Django PROJECT can have many Django APPLICATIONS
+    > django-admin startproject team_builder_django .
+        The . prevents a subfolder from being created, just for organizational preference / simplicity
+
+Start a Django App
+    Django APP folder will be where most of of the development occurs
+    Created the single CORE application WITHIN the project
+    > cd team_builder_django
+    > django-admin startapp core
+
+DEV LOG
+    gallupBPAPP (core)
+        admin.py
+            Registered Employee as having an admin interface
+        models.py  
+            Created Employee model
+        serializer.py
+            Serializes the Employee model to native Python datatypes (Might not be necessary?)
+        views.py 
+            -Added a basic view displaying HTML output
+            -Added a class for React REST API 
+        urls.py
+            Creating a URLconf for views in the APP 
+    gallupBP
+        urls.py
+            Added a path() to include() gallupBPAPP.urls
+        settings.py   
+            Set TIMEZONE to 'America/Chicago' (from UTC)
+    <console>
+        Created superuser USER: admin EMAIL: admin@uky.not PW: foo
+
+REFERENCES
+Setup Tutorial    
+    https://realpython.com/django-setup/
+Reference RE: Virtual Environments
+    https://realpython.com/python-virtual-environments-a-primer/#activate-it
+Reference RE: Django
+    https://docs.djangoproject.com/en/4.1/intro/tutorial01/
+
+
+DJANGO NOTES
+Documentation Notes
+    Files
+        manage.py
+            Important
+        models.py  
+            Database layouts + additional metadata
+        settings.py
+            Project settings
+            Database Details are set here
+    Functions
+    path()
+        Has four arguments; 
+        2 required
+            route : str that contains an urlpattern
+            view  : ???
+        2 optional
+            kwargs: {} arbitrary arguments
+            name  : used for django references (templates)
+            
+
+
+Common Django Commands
+    $ python manage.py runserver
+        Runs the development server using manage.py
+    $ python manage.py runserver 8080
+        Runs server on port 8080
+    $ python manage.py runserver 0.0.0.0:8000
+        Runs server at IP 0.0.0.0 and PORT 8000
+    $ python manage.py makemigrations <app_name>
+        Commits changes to the MODELS (e.g. the database format) to application
+    $ python manage.py migrate
+        TODO: Verify this#
+            Commits changes to the Django project
+            Necessary after adding changes to do before running the server
+
+REQUIREMENTS:
+    asgiref==3.5.2
+    Django==4.1.2
+    django-cors-headers==3.13.0
+    djangorestframework==3.14.0
+    pytz==2022.4
+    sqlparse==0.4.3
+    tzdata==2022.4
+    
+
+
+# CS499-LexmarkProject
+Senior Design Project. Lexmark Gallup BP10 Team Builder Web Application.
+
+# Files
+React Frontend                  team_builder_react
+Django Backend                  team_builder_django
+Python Virtual Environment      py_venv
+
+# Starting Django
+Activate the Django Virtual Environment
+    (Windows)
+        > py_venv\Scripts\activate
+        To exit python virtual environment
+        > deactivate
+Run the Django Server
+    python manage.py runserver
+
+
+npm install react-scripts --save
