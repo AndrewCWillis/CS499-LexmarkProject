@@ -1,6 +1,7 @@
 import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
 import React, { Component } from 'react';
-import TeamMember from './TeamMember.js'
+import TeamMember from '../components/TeamMember.js';
 
 class TeamSize extends Component {
     constructor() {
@@ -12,14 +13,15 @@ class TeamSize extends Component {
       }
 
     handleChange(event) {
+        var input = document.getElementById('teamSize').value
 
-        if (isNaN(event.target.value)){
+        if (isNaN(input)){
 
             event.target.className = "form-control is-invalid"
             document.getElementById("ErrorMessage").className = "text-danger visible"
 
         }else{
-            if (event.target.value > 0){
+            if (input > 0){
                 this.setState({
                     valid: true,
                     num : 0
@@ -47,32 +49,26 @@ class TeamSize extends Component {
             console.log("REJECTED!")
         }
     }
-    static getDerivedStateFromProps(props, state) {
-        return {favoritecolor: props.favcol };
-      }
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
             var amt = this.state.num
             return(<TeamMember key = {0} />);
         }else{
+
             return(
-                <form>
-                    <div className="container">
-                    <label className = "form-group control-label" htmlFor="teamSize">
-                        Please, Enter the Number of Employees For Your Team:
-                    </label>
-                    <div className="form-group row">
-                        <div className = "row">
-                            <div className="col">       
-                                <input type="text"  id="teamSize" onChange = {this.handleChange} className ="form-control input-sm"></input>
-                            </div>
-                            <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button>
-                        </div>
-                    </div>  
-                    <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>
-                    </div>     
-                        
-                </form>
+                
+                <Form className="mx-auto my-auto h-100">
+                    <Form.Group className='mb-3' controlId='teamSize' onChange = {this.handleChange}>
+                        <Form.Label>
+                            Please, Enter the Number of Employees For Your Team:
+                        </Form.Label> 
+                        <Form.Control placeholder='Enter Number of Team Members' />  
+                    </Form.Group>           
+                    <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button> 
+                    <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
+                </Form>
+                
+                
             );
         }
     }
