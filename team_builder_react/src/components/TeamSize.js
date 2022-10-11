@@ -1,7 +1,11 @@
 import Button from 'react-bootstrap/Button';
 import React, { Component } from 'react';
+<<<<<<< HEAD
 import TeamMember from '../components/TeamMember.js';
 import Results from '../components/Results.js';
+=======
+import TeamMember from './TeamMember.js'
+>>>>>>> parent of 645b3e2 (Fixed the sizing of input forms to match Spencers. (#5))
 
 class TeamSize extends Component {
     constructor() {
@@ -14,9 +18,14 @@ class TeamSize extends Component {
       }
 
     handleChange(event) {
+<<<<<<< HEAD
         var input = document.getElementById('teamSize').value
         console.log.here("here")
         if (isNaN(input)){
+=======
+
+        if (isNaN(event.target.value)){
+>>>>>>> parent of 645b3e2 (Fixed the sizing of input forms to match Spencers. (#5))
 
             event.target.className = "form-control is-invalid"
             document.getElementById("ErrorMessage").className = "text-danger visible"
@@ -52,6 +61,7 @@ class TeamSize extends Component {
             console.log("REJECTED!")
         }
     }
+<<<<<<< HEAD
     handleSubmit(event){
         event.preventDefault()
         this.setState({
@@ -60,6 +70,11 @@ class TeamSize extends Component {
             num : this.state.num
           });
     }
+=======
+    static getDerivedStateFromProps(props, state) {
+        return {favoritecolor: props.favcol };
+      }
+>>>>>>> parent of 645b3e2 (Fixed the sizing of input forms to match Spencers. (#5))
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
             if (this.state.submit){
@@ -76,6 +91,7 @@ class TeamSize extends Component {
             }
         }else{
             return(
+<<<<<<< HEAD
                 
                 <Form className="mx-auto my-auto h-100">
                     <Form.Group className='mb-3' controlId='teamSize' onChange = {this.handleChange}>
@@ -88,6 +104,25 @@ class TeamSize extends Component {
                     <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
                 </Form>
                 
+=======
+                <form>
+                    <div className="container">
+                    <label className = "form-group control-label" htmlFor="teamSize">
+                        Please, Enter the Number of Employees For Your Team:
+                    </label>
+                    <div className="form-group row">
+                        <div className = "row">
+                            <div className="col">       
+                                <input type="text"  id="teamSize" onChange = {this.handleChange} className ="form-control input-sm"></input>
+                            </div>
+                            <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button>
+                        </div>
+                    </div>  
+                    <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>
+                    </div>     
+                        
+                </form>
+>>>>>>> parent of 645b3e2 (Fixed the sizing of input forms to match Spencers. (#5))
             );
         }
     }
