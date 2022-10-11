@@ -2,14 +2,19 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import React, { Component } from 'react';
 import TeamMember from '../components/TeamMember.js';
+<<<<<<< HEAD
+=======
+import Results from '../components/Results.js';
+>>>>>>> homogenize_presentation_with_input
 
 class TeamSize extends Component {
     constructor() {
         super();
-        this.state = {valid: false, num: 0};
+        this.state = {valid: false, submit: false, num: 0};
 
         this.handleChange = this.handleChange.bind(this)
         this.handleClick = this.handleClick.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
       }
 
     handleChange(event) {
@@ -24,6 +29,7 @@ class TeamSize extends Component {
             if (input > 0){
                 this.setState({
                     valid: true,
+                    submit: false,
                     num : 0
                   });
                 event.target.className = "form-control is-valid"
@@ -41,6 +47,7 @@ class TeamSize extends Component {
         if(this.state.valid){
             this.setState({
                 valid: true,
+                submit: false,
                 num : amt
               });
             console.log("ACCEPTED!")
@@ -49,10 +56,31 @@ class TeamSize extends Component {
             console.log("REJECTED!")
         }
     }
+<<<<<<< HEAD
+=======
+    handleSubmit(event){
+        event.preventDefault()
+        this.setState({
+            valid: true,
+            submit: true,
+            num : this.state.num
+          });
+    }
+>>>>>>> homogenize_presentation_with_input
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
-            var amt = this.state.num
-            return(<TeamMember key = {0} />);
+            if (this.state.submit){
+                return(
+                    <Results />
+                );
+            }else{
+                return(
+                    <>
+                        <TeamMember key = {0} />
+                        <Button  variant="primary" href='/build' onClick = {this.handleSubmit} className = "col-2">Build</Button>
+                    </>
+                );
+            }
         }else{
 
             return(
@@ -64,11 +92,18 @@ class TeamSize extends Component {
                         </Form.Label> 
                         <Form.Control placeholder='Enter Number of Team Members' />  
                     </Form.Group>           
+<<<<<<< HEAD
                     <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button> 
                     <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
                 </Form>
                 
                 
+=======
+                    <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Continue</Button> 
+                    <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
+                </Form>
+                
+>>>>>>> homogenize_presentation_with_input
             );
         }
     }
