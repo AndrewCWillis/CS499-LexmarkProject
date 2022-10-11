@@ -2,10 +2,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import React, { Component } from 'react';
 import TeamMember from '../components/TeamMember.js';
-<<<<<<< HEAD
-=======
 import Results from '../components/Results.js';
->>>>>>> homogenize_presentation_with_input
 
 class TeamSize extends Component {
     constructor() {
@@ -56,8 +53,6 @@ class TeamSize extends Component {
             console.log("REJECTED!")
         }
     }
-<<<<<<< HEAD
-=======
     handleSubmit(event){
         event.preventDefault()
         this.setState({
@@ -66,7 +61,6 @@ class TeamSize extends Component {
             num : this.state.num
           });
     }
->>>>>>> homogenize_presentation_with_input
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
             if (this.state.submit){
@@ -92,18 +86,15 @@ class TeamSize extends Component {
                         </Form.Label> 
                         <Form.Control placeholder='Enter Number of Team Members' />  
                     </Form.Group>           
-<<<<<<< HEAD
                     <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Build</Button> 
                     <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
                 </Form>
                 
-                
-=======
+             
                     <Button  onClick = {this.handleClick} variant="primary" href='/build' className = "col-2">Continue</Button> 
                     <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
                 </Form>
                 
->>>>>>> homogenize_presentation_with_input
             );
         }
     }
