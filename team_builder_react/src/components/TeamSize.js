@@ -19,7 +19,7 @@ class TeamSize extends Component {
 
     handleChange(event) {
         var input = document.getElementById('teamSize').value
-
+        console.log.here("here")
         if (isNaN(input)){
 
             event.target.className = "form-control is-invalid"
