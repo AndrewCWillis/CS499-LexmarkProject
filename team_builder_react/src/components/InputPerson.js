@@ -17,7 +17,7 @@ const InputPerson = () => {
     const [ isOnSkills, setIsOnSkills ] = useState(false);
     const [ isOnFile, setIsOnFile ] = useState(false);
 
-    const Name = () => {
+    const Name = ( { inputtedPerson } ) => {
         const HandleNameInput = () => {
             // https://stackoverflow.com/questions/70824806/getting-user-input-value-from-bootstrap-form
             var firstN = document.getElementById('formFirstName').value;
@@ -57,11 +57,11 @@ const InputPerson = () => {
             <Form className="mx-auto my-auto h-100">
                 <Form.Group className='mb-3' controlId='formFirstName' >
                     <Form.Label>First Name</Form.Label>
-                    <Form.Control placeholder='Enter first name' />
+                    <Form.Control defaultValue={inputtedPerson.firstName} placeholder='First Name' />
                 </Form.Group>
                 <Form.Group className='mb-3' controlId='formLastName' >
                     <Form.Label>Last Name</Form.Label>
-                    <Form.Control placeholder='Enter last name' />
+                    <Form.Control defaultValue={inputtedPerson.lastName} placeholder='Last Name' />
                 </Form.Group>
                 <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
                     <Button disabled={true}>Back</Button>
@@ -74,23 +74,35 @@ const InputPerson = () => {
 
     const Skills = () => {
         const HandleSkillsInput = () => {
+            console.log(person)
+            setIsOnSkills(false);
+            setIsOnFile(true);
+        }
 
+        const GetInputFromCheckList = (skillsList) => {
+            setPerson({...person, 'skills': skillsList});
+        }
+
+        const HandleBack = () => {
+            setIsOnName(true);
+            setIsOnSkills(false);
         }
         return (
-            <Stack gap={2} className="h-100">
-                <CheckList></CheckList>
+            <Form className="mx-auto my-auto h-100">
+                <Form.Group className='mb-3' controlId='formTechSkills' >
+                    <Form.Label>Enter Your Technical Skills</Form.Label>
+                    <CheckList SendToParent={GetInputFromCheckList}></CheckList>
+                </Form.Group>
                 <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
-                    <Button>Back</Button>
+                    <Button disabled={false} onClick={HandleBack}>Back</Button>
                     <Button onClick={HandleSkillsInput}>Continue</Button>
                 </Stack>
-                
-            </Stack>
-
+            </Form>
         );
     }
 
     if (isOnName) {
-        return (<Name />);
+        return (<Name inputtedPerson={person}/>);
     } else if (isOnSkills) {
         return (<Skills />);
     } else  {
