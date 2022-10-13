@@ -4,6 +4,14 @@ import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Stack from 'react-bootstrap/Stack';
 
 function TeamList(props) {
+
+    function removeHandler(event){
+        event.target.parentElement.remove()
+    }
+    function addHandler(event){
+        console.log("Tried to replace a team member.")
+    }
+
     var TeamList = ['Robert', 'Spencer', 'Wade', 'Alex', 'Andrew']
     console.log(props.type)
 
@@ -25,7 +33,7 @@ function TeamList(props) {
                     return(
                     <ButtonGroup aria-label="Basic example" key={name}>
                         <Button variant={props.type} size = "lg" >{name}</Button>
-                        <Button variant={props.type} size = "sm" style = {props.type == "info" ? remove : assign}>{props.type == "info" ? 'X' : '+'}</Button>
+                        <Button variant={props.type} size = "sm" onClick = {props.type == "info" ? removeHandler : addHandler} style = {props.type == "info" ? remove : assign}>{props.type == "info" ? 'X' : '+'}</Button>
                     </ButtonGroup>
                     )
                 }
