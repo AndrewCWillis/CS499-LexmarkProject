@@ -4,6 +4,9 @@ import { useState } from 'react';
 import TeamList from './TeamList.js';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
+import Stack from 'react-bootstrap/Stack';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 const Name = () => {
     const labels = ['Confidence', 'Delegator', 'Determination', 'Selling', 'Relationship', 'Disrupter', 'Knowledge', 'Independance', 'Profitability', 'Risk'];
@@ -30,6 +33,13 @@ const Name = () => {
           },
         ],
       };
+
+      const divider = {
+        borderLeft: "1px solid #000",
+        height: "200px"
+      };
+
+      const name = "Robert"; // will be dynamically determined later
     return (  
         <>
         <Navbar bg="dark"  variant="dark">
@@ -43,7 +53,34 @@ const Name = () => {
             <Navbar.Brand>Discovered Team:</Navbar.Brand>
           </Container>
         </Navbar>
-        <TeamList />
+        <Container>
+          <Row>
+          <Col>
+              <Navbar bg="light">
+                <Container>
+                  <Navbar.Brand>Discovered Team:</Navbar.Brand>
+                </Container>
+              </Navbar>
+          </Col>
+          <Col>
+              <Navbar bg="light">
+                <Container>
+                  <Navbar.Brand>Supplemental Candidates for {name}:</Navbar.Brand>
+                </Container>
+              </Navbar>
+          </Col>
+            </Row>
+            <Row>
+            <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
+              <TeamList type = "info"/>
+
+              <div style={divider}></div>
+
+              <TeamList type = "secondary"/>
+              
+            </Stack>
+          </Row>
+        </Container>
         </>
     );
 }
