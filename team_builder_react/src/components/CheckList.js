@@ -1,23 +1,33 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Multiselect from 'multiselect-react-dropdown';
 
-// https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/
+/*
+  This component renders a multiselect-react-dropdown component.
+
+  props: SendToParent - a callback function that this component will call whenever
+          the selected values in the multiselect-react-dropdown changes. The
+          function should take a single parameter, a list.
+
+  https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/
+*/
 const CheckList = ( { SendToParent }) => {
   const skills = ['JavaScript', 'React', 'Python', 'HTML', 'Bootstrap', 'JQuery', 'DJango'];
-  //const [options, setOptions] = useState(skills.map((skill, index) => ({'name' : skill, 'id' : index})));
   var options = skills.map((skill, index) => ({'name' : skill, 'id' : index}));
-  const [selectedValues, setSelectedValues] = useState([]);
 
+  /*
+    Callback function for when the user selects a new item.
+  */
   const onSelect = (selectedList, selectedItem) => {
-    setSelectedValues([selectedList]);
-    console.log(selectedList);
-    console.log(selectedItem);
-    //SendToParent(selectedList);
+    // console.log(selectedList);
+    // console.log(selectedItem);
+    SendToParent(selectedList);
   }
-    
+  
+  /*
+    Callback function for when the user deselects an item.
+  */
   const onRemove = (selectedList, removedItem) => {
-    setSelectedValues([...selectedValues, removedItem]);
-    console.log("Here")
+    // console.log("Here")
     SendToParent(selectedList)
   }
 
@@ -25,11 +35,10 @@ const CheckList = ( { SendToParent }) => {
   return(
     <Multiselect
       options={options} // Options to display in the dropdown
-      //selectedValues={selectedValues} // Preselected value to persist in dropdown
-      values={selectedValues}
       onSelect={onSelect} // Function will trigger on select event
       onRemove={onRemove} // Function will trigger on remove event
       displayValue="name" // Property name to display in the dropdown options
+      avoidHighlightFirstOption={true}
     />
   );
 }
