@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
+import CSVReader from 'react-csv-reader';
 import { useState } from 'react';
 
 import CheckList from '../components/CheckList';
@@ -93,6 +94,9 @@ const InputPerson = () => {
     /*
         Component to get the technical skills of a user. It will display the
         CheckList component as well as two buttons, Back and Continue.
+
+        TODO: Update so that if user goes back from Trait input their previously
+            inputted skills are already filled in.
      */
     const Skills = () => {
         // Non-state variable for holding changes to the selected values in the CheckList
@@ -144,14 +148,122 @@ const InputPerson = () => {
         );
     }
 
+    /*
+        Component to get a person's BP10 results. It will display a file upload
+            to the user.
+     */
+    const Traits = () => {
+        var parsedTraits = [];
+
+        /*
+            Callback function for when the user clicks the "Back" button.
+        */
+        const HandleBack = () => {
+            setIsOnFile(false)
+            setIsOnSkills(true);
+        }
+
+        /*
+            Callback function for when the user clicks the "Continue" button.
+
+            Set the state's traits to the ones read from the csv.
+
+            Send the person's information to the back-end
+        */
+        const HandleTraitsSubmit = () => {
+            setIsOnFile(false);
+
+            setPerson({...person, 'traits': parsedTraits});
+
+            // TODO: send person to back-end
+        }
+
+        /*
+            Callback function for when the user uploads a file. This function
+                will parse the csv and display an error if the file cannot
+                be read as expected.
+
+            data should be an array of objects where each one is a record.
+        */
+        const HandleFileUpload = (data, fileInfo, originalFile) => {
+            // console.log(data)
+            var foundMatch = false;
+
+            // Loop through all the records looking for one with a name that EXACTLY
+            //  matches the one input thus far.
+            data.forEach((record) => {
+                // Note: If no values exist for names in the csv, this will evaluate to false
+                if (record['First Name'] === person.firstName && record['Last Name'] === person.lastName) {
+                    foundMatch = true;
+
+                    // Put the trait values into an array.
+                    parsedTraits.push(record['Confidence']);
+                    parsedTraits.push(record['Delegator']);
+                    parsedTraits.push(record['Determination']);
+                    parsedTraits.push(record['Disruptor']);
+                    parsedTraits.push(record['Independence']);
+                    parsedTraits.push(record['Knowledge']);
+                    parsedTraits.push(record['Profitibility']);
+                    parsedTraits.push(record['Relationship']);
+                    parsedTraits.push(record['Risk']);
+                    parsedTraits.push(record['Selling']);
+
+                    // If any of the traits could not be read
+                    if (parsedTraits.contains(undefined)) {
+                        // TODO: display error
+                    }
+                }
+            });
+
+            if (!foundMatch) {
+                // TODO: display error
+            }
+        }
+
+        /*
+            Callback function for when the CSVReader cannot parse the file.
+        */
+        const HandleUploadError = (error) => {
+            // TODO: Handle CSVReader parsing error
+        }
+
+        // https://www.npmjs.com/package/react-csv-reader
+        const papaparseOptions = {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true
+        }
+
+        return (
+            <Form className="mx-auto my-auto h-100">
+                <Form.Group className='mb-3' controlId='formBP10File' >
+                    <Form.Label>Upload Your BP10 Report as a CSV File</Form.Label>
+                    <CSVReader 
+                        onFileLoaded={HandleFileUpload}
+                        onError={HandleUploadError}
+                        cssClass='custom-file-input'
+                        cssInputClass='form-control'
+                        parserOptions={papaparseOptions} />
+                    {/* <Form.Control type='file' /> */}
+                </Form.Group>
+                <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                    <Button disabled={false} onClick={HandleBack}>Back</Button>
+                    <Button onClick={HandleTraitsSubmit}>Submit</Button>
+                </Stack>
+            </Form>
+        );
+    }
+
     // Choose which input component this InputPerson component should render.
     if (isOnName) {
         return (<Name defaultFirstName={person.firstName} defaultLastName={person.lastName} />);
     } else if (isOnSkills) {
         return (<Skills />);
-    } else  {
+    } else if (isOnFile) {
         console.log(person);
-        return <div>hi</div>
+        return (<Traits />)
+    } else {
+        return <h1>Thank you for submitting your information.</h1>
     }
 }
 
