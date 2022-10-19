@@ -6,9 +6,9 @@ from rest_framework.response import Response
 from . serializer import *
 
 # Create your views here.
-class ReactView(APIView):
+class Employees(APIView):
 
-    serializerClass = ReactSerializer
+    serializerClass = EmployeeSerializer
 
     def get(self, request):
         detail = [
@@ -35,7 +35,28 @@ class ReactView(APIView):
         return Response(detail)
 
     def post(self, request):
-        serializer = ReactSerializer(data=request.data)
+        serializer = EmployeeSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(serializer.data)
+
+class RequestedTeams(APIView):
+
+    serializerClass = RequestedTeamSerializer
+    
+    def get(self, request):
+        detail = [
+            {
+                "id":detail.id,
+                "teamSize":detail.teamSize,
+                "skills": detail.skills
+            }
+        for detail in RequestedTeam.objects.all()]
+
+        return Response(detail)
+    
+    def post(self, request):
+        serializer = RequestedTeamSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(serializer.data)

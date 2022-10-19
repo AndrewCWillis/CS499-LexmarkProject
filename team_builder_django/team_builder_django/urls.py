@@ -19,5 +19,6 @@ from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('reactEndPoint/', ReactView.as_view(), name="endpoint")
+    path('employees/', Employees.as_view(), name="employees"),
+    path('requested_teams', RequestedTeams.as_view(), name="rqteams")
 ]
