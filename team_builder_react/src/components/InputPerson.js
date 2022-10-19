@@ -209,7 +209,7 @@ const InputPerson = () => {
                     parsedTraits.push(record['Selling']);
 
                     // If any of the traits could not be read
-                    if (parsedTraits.contains(undefined)) {
+                    if (parsedTraits.includes(undefined)) {
                         // TODO: display error
                     }
                 }
@@ -256,13 +256,16 @@ const InputPerson = () => {
 
     // Choose which input component this InputPerson component should render.
     if (isOnName) {
+        // console.log(person);
         return (<Name defaultFirstName={person.firstName} defaultLastName={person.lastName} />);
     } else if (isOnSkills) {
+        // console.log(person);
         return (<Skills />);
     } else if (isOnFile) {
-        console.log(person);
+        // console.log(person);
         return (<Traits />)
     } else {
+        // console.log(person);
         return <h1>Thank you for submitting your information.</h1>
     }
 }
