@@ -21,7 +21,7 @@ const TeamMember = () => {
                 <div className = "form-label">
                     Please, Enter the Desired Technical Skills for this Position:
                 </div>
-                {<CheckList SendToParent={GetInputFromCheckList} />}
+                {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
             </div>    
         </form>
     </>
