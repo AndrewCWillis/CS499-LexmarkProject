@@ -1,7 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
-import CSVReader from 'react-csv-reader';
+import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react-csv-reader
 import { useState } from 'react';
 
 import CheckList from '../components/CheckList';
@@ -188,6 +188,8 @@ const InputPerson = () => {
         const HandleFileUpload = (data, fileInfo, originalFile) => {
             // console.log(data)
             var foundMatch = false;
+            var undefinedTrait = false;
+            console.log(fileInfo);
 
             // Loop through all the records looking for one with a name that EXACTLY
             //  matches the one input thus far.
@@ -208,15 +210,32 @@ const InputPerson = () => {
                     parsedTraits.push(record['Risk']);
                     parsedTraits.push(record['Selling']);
 
-                    // If any of the traits could not be read
+                    // If any of the traits could not be read, tell the user
+                    // https://stackoverflow.com/questions/19324294/equivalent-of-pythons-keyerror-exception-in-javascript
                     if (parsedTraits.includes(undefined)) {
-                        // TODO: display error
+                        undefinedTrait = true;
+                        
+                        document.getElementById("ErrorMessage").className = "text-danger visible";
+                        document.getElementById("ErrorMessage").innerText = "Could not find a value for one of the BP10 traits for the previously inputted name.";
+                        document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+
+                        return;
                     }
                 }
             });
 
-            if (!foundMatch) {
-                // TODO: display error
+            /*
+                If the thus-far inputted person cannot be found in the csv,
+                then display an error message. If the person can be found,
+                tell the user the input is valid.
+            */
+            if (!foundMatch && !undefinedTrait) {
+                document.getElementById("ErrorMessage").className = "text-danger visible";
+                document.getElementById("ErrorMessage").innerText = "Previously inputted name could not be found.";
+                document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+            } else if (foundMatch && !undefinedTrait){
+                document.getElementById("ErrorMessage").className = "text-danger invisible";
+                document.getElementById("react-csv-reader-input").className = "form-control is-valid";
             }
         }
 
@@ -225,6 +244,7 @@ const InputPerson = () => {
         */
         const HandleUploadError = (error) => {
             // TODO: Handle CSVReader parsing error
+            console.log(error);
         }
 
         // https://www.npmjs.com/package/react-csv-reader
@@ -250,6 +270,7 @@ const InputPerson = () => {
                     <Button disabled={false} onClick={HandleBack}>Back</Button>
                     <Button onClick={HandleTraitsSubmit}>Submit</Button>
                 </Stack>
+                <div className="text-danger invisible" id="ErrorMessage">Please upload a valid csv.</div>
             </Form>
         );
     }
@@ -265,7 +286,7 @@ const InputPerson = () => {
         // console.log(person);
         return (<Traits />)
     } else {
-        // console.log(person);
+        console.log(person);
         return <h1>Thank you for submitting your information.</h1>
     }
 }
