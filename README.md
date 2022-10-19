@@ -9,8 +9,8 @@ Django Backend: `team_builder_django`
 Python Virtual Environment: `py_venv`
 
 # Starting Django
-Before the Django server is started, the Python virtual environment must be activated. 
-
+Before the Django server is started, a Python virtual environment must be created using `python -m venv py_venv`. Once created activate the virtual environment using `py_venv\Scripts\activate` (Windows). 
+    python -m venv py_venv
     py_venv\Scripts\activate
 
 To exit python virtual environment `deactivate`
