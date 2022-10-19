@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from . models import *
   
-class ReactSerializer(serializers.ModelSerializer):
+class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = [
@@ -20,3 +20,12 @@ class ReactSerializer(serializers.ModelSerializer):
                 'bpt_risk',
                 'bpt_selling',
                 ]
+
+class RequestedTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequestedTeam
+        field = [
+            'id'
+            'teamSize',
+            'skills'
+        ]

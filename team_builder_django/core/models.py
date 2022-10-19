@@ -17,6 +17,11 @@ class Employee(models.Model):
     bpt_risk = models.FloatField()
     bpt_selling = models.FloatField()
 
+class RequestedTeam(models.Model):
+    id = models.IntegerField(primary_key=True)
+    teamSize = models.IntegerField()
+    skills = models.TextField()
+    
 # class Team(models.Model):
     # Team Size?
     # Array of Employee references?
