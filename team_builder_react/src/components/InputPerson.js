@@ -190,7 +190,14 @@ const InputPerson = () => {
                 will parse the csv and display an error if the file cannot
                 be read as expected.
 
-            data should be an array of objects where each one is a record.
+            As mentioned in this GitHub issue (https://github.com/nzambello/react-csv-reader/issues/17),
+                an updated file with the same name as the one loaded into the app
+                will not cause the csv-reader to load the newly updated file.
+                
+                TODO: Add to the help page that the user can click 'Back' then
+                'Continue' to clear the loaded file and circumvent the above issue.
+
+            data - an array of objects where each one is a record.
         */
         const HandleFileUpload = (data, fileInfo, originalFile) => {
             var foundMatch = false;
