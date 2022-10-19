@@ -171,11 +171,18 @@ const InputPerson = () => {
             Send the person's information to the back-end
         */
         const HandleTraitsSubmit = () => {
-            setIsOnFile(false);
+            // If traits have been collected
+            if (parsedTraits.length === 10) {
+                setIsOnFile(false);
 
-            setPerson({...person, 'traits': parsedTraits});
+                setPerson({...person, 'traits': parsedTraits});
 
-            // TODO: send person to back-end
+                // TODO: send person to back-end
+            } else {
+                document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                document.getElementById("TraitsErrorMessage").innerText = "Please upload a valid CSV file before submitting.";
+                document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+            }
         }
 
         /*
@@ -186,10 +193,8 @@ const InputPerson = () => {
             data should be an array of objects where each one is a record.
         */
         const HandleFileUpload = (data, fileInfo, originalFile) => {
-            // console.log(data)
             var foundMatch = false;
             var undefinedTrait = false;
-            console.log(fileInfo);
 
             // Loop through all the records looking for one with a name that EXACTLY
             //  matches the one input thus far.
@@ -214,11 +219,12 @@ const InputPerson = () => {
                     // https://stackoverflow.com/questions/19324294/equivalent-of-pythons-keyerror-exception-in-javascript
                     if (parsedTraits.includes(undefined)) {
                         undefinedTrait = true;
+                        parsedTraits = [] // reset the traits array
                         
-                        document.getElementById("ErrorMessage").className = "text-danger visible";
-                        document.getElementById("ErrorMessage").innerText = "Could not find a value for one of the BP10 traits for the previously inputted name.";
+                        document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a value for one or more of the BP10 traits for the previously inputted name.";
                         document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
-
+                        
                         return;
                     }
                 }
@@ -230,21 +236,23 @@ const InputPerson = () => {
                 tell the user the input is valid.
             */
             if (!foundMatch && !undefinedTrait) {
-                document.getElementById("ErrorMessage").className = "text-danger visible";
-                document.getElementById("ErrorMessage").innerText = "Previously inputted name could not be found.";
+                document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found.";
                 document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
             } else if (foundMatch && !undefinedTrait){
-                document.getElementById("ErrorMessage").className = "text-danger invisible";
+                document.getElementById("TraitsErrorMessage").className = "text-danger invisible";
                 document.getElementById("react-csv-reader-input").className = "form-control is-valid";
             }
         }
 
         /*
-            Callback function for when the CSVReader cannot parse the file.
+            Callback function for when the CSVReader gets a file that is not 
+                of type csv/text.
         */
         const HandleUploadError = (error) => {
-            // TODO: Handle CSVReader parsing error
-            console.log(error);
+            document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+            document.getElementById("TraitsErrorMessage").innerText = error.message;
+            document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
         }
 
         // https://www.npmjs.com/package/react-csv-reader
@@ -263,14 +271,14 @@ const InputPerson = () => {
                         onError={HandleUploadError}
                         cssClass='custom-file-input'
                         cssInputClass='form-control'
-                        parserOptions={papaparseOptions} />
-                    {/* <Form.Control type='file' /> */}
+                        parserOptions={papaparseOptions}
+                        strict={true} />
                 </Form.Group>
                 <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
-                    <Button disabled={false} onClick={HandleBack}>Back</Button>
-                    <Button onClick={HandleTraitsSubmit}>Submit</Button>
+                    <Button onClick={HandleBack}>Back</Button>
+                    <Button onClick={HandleTraitsSubmit} id="TraitsSubmit">Submit</Button>
                 </Stack>
-                <div className="text-danger invisible" id="ErrorMessage">Please upload a valid csv.</div>
+                <div className="text-danger invisible" id="TraitsErrorMessage">Please upload a valid csv.</div>
             </Form>
         );
     }
@@ -284,10 +292,19 @@ const InputPerson = () => {
         return (<Skills />);
     } else if (isOnFile) {
         // console.log(person);
-        return (<Traits />)
+        return (<Traits />);
     } else {
-        console.log(person);
-        return <h1>Thank you for submitting your information.</h1>
+        // console.log(person);
+        return (
+            <div>
+                <h2>
+                    Thank you for submitting your information!
+                </h2>
+                <h2>
+                    Your information can now be used when building a team!
+                </h2>
+            </div>
+        );
     }
 }
 
