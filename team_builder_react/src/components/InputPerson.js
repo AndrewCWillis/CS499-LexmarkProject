@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
+import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react-csv-reader
 import { useState } from 'react';
 
 import CheckList from '../components/CheckList';
@@ -93,6 +94,9 @@ const InputPerson = () => {
     /*
         Component to get the technical skills of a user. It will display the
         CheckList component as well as two buttons, Back and Continue.
+
+        TODO: Update so that if user goes back from Trait input their previously
+            inputted skills are already filled in.
      */
     const Skills = () => {
         // Non-state variable for holding changes to the selected values in the CheckList
@@ -144,14 +148,185 @@ const InputPerson = () => {
         );
     }
 
+    /*
+        Component to get a person's BP10 results. It will display a file upload
+            to the user.
+     */
+    const Traits = () => {
+        var parsedTraits = [];
+
+        /*
+            Callback function for when the user clicks the "Back" button.
+        */
+        const HandleBack = () => {
+            setIsOnFile(false)
+            setIsOnSkills(true);
+        }
+
+        /*
+            Callback function for when the user clicks the "Continue" button.
+
+            Set the state's traits to the ones read from the csv.
+
+            Send the person's information to the back-end
+        */
+        const HandleTraitsSubmit = () => {
+            // If traits have been collected
+            if (parsedTraits.length === 10) {
+                setIsOnFile(false);
+
+                setPerson({...person, 'traits': parsedTraits});
+
+                // TODO: send person to back-end
+            } else {
+                document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                document.getElementById("TraitsErrorMessage").innerText = "Please upload a valid CSV file before submitting.";
+                document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+            }
+        }
+
+        /*
+            Callback function for when the user uploads a file. This function
+                will parse the csv and display an error if the file cannot
+                be read as expected.
+
+            As mentioned in this GitHub issue (https://github.com/nzambello/react-csv-reader/issues/17),
+                an updated file with the same name as the one loaded into the app
+                will not cause the csv-reader to load the newly updated file.
+                
+                TODO: Add to the help page that the user can click 'Back' then
+                'Continue' to clear the loaded file and circumvent the above issue.
+
+            data - an array of objects where each one is a record.
+        */
+        const HandleFileUpload = (data, fileInfo, originalFile) => {
+            var foundMatch = false;
+            var traitValueError = false;
+
+            // Loop through all the records looking for one with a name that EXACTLY
+            //  matches the one input thus far.
+            data.forEach((record) => {
+                // Note: If no values exist for names in the csv, this will evaluate to false
+                if (record['First Name'] === person.firstName && record['Last Name'] === person.lastName) {
+                    foundMatch = true;
+
+                    // Put the trait values into an array.
+                    parsedTraits.push(record['Confidence']);
+                    parsedTraits.push(record['Delegator']);
+                    parsedTraits.push(record['Determination']);
+                    parsedTraits.push(record['Disruptor']);
+                    parsedTraits.push(record['Independence']);
+                    parsedTraits.push(record['Knowledge']);
+                    parsedTraits.push(record['Profitibility']);
+                    parsedTraits.push(record['Relationship']);
+                    parsedTraits.push(record['Risk']);
+                    parsedTraits.push(record['Selling']);
+
+                    // If any of the traits could not be read, tell the user
+                    // https://stackoverflow.com/questions/19324294/equivalent-of-pythons-keyerror-exception-in-javascript
+                    if (parsedTraits.includes(undefined)) {
+                        traitValueError = true;
+                        parsedTraits = [] // reset the traits array
+                        
+                        document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a value for one or more of the BP10 traits for the previously inputted name.";
+                        document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+                        
+                        return;
+                    }
+
+                    // For each trait value we found, check that it is numeric
+                    parsedTraits.forEach((traitValue) => {
+                        // If the trait value is not a number, say that we cannot parse it
+                        if (typeof(traitValue) !== 'number') {
+                            traitValueError = true;
+                            parsedTraits = [] // reset the traits array
+
+                            document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                            document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value for one or more of the BP10 traits for the previously inputted name.";
+                            document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+                            
+                            return;
+                        }
+                    });
+                }
+            });
+
+            /*
+                If the thus-far inputted person cannot be found in the csv,
+                then display an error message. If the person can be found,
+                tell the user the input is valid.
+            */
+            if (!foundMatch && !traitValueError) {
+                document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found.";
+                document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+            } else if (foundMatch && !traitValueError){
+                document.getElementById("TraitsErrorMessage").className = "text-danger invisible";
+                document.getElementById("react-csv-reader-input").className = "form-control is-valid";
+            }
+        }
+
+        /*
+            Callback function for when the CSVReader gets a file that is not 
+                of type csv/text.
+        */
+        const HandleUploadError = (error) => {
+            document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+            document.getElementById("TraitsErrorMessage").innerText = error.message;
+            document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+        }
+
+        // https://www.npmjs.com/package/react-csv-reader
+        const papaparseOptions = {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true
+        }
+
+        return (
+            <Form className="mx-auto my-auto h-100">
+                <Form.Group className='mb-3' controlId='formBP10File' >
+                    <Form.Label>Upload Your BP10 Report as a CSV File</Form.Label>
+                    <CSVReader 
+                        onFileLoaded={HandleFileUpload}
+                        onError={HandleUploadError}
+                        cssClass='custom-file-input'
+                        cssInputClass='form-control'
+                        parserOptions={papaparseOptions}
+                        strict={true} />
+                </Form.Group>
+                <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                    <Button onClick={HandleBack}>Back</Button>
+                    <Button onClick={HandleTraitsSubmit} id="TraitsSubmit">Submit</Button>
+                </Stack>
+                <div className="text-danger invisible" id="TraitsErrorMessage">Please upload a valid csv.</div>
+            </Form>
+        );
+    }
+
     // Choose which input component this InputPerson component should render.
     if (isOnName) {
+        // console.log(person);
         return (<Name defaultFirstName={person.firstName} defaultLastName={person.lastName} />);
     } else if (isOnSkills) {
+        // console.log(person);
         return (<Skills />);
-    } else  {
-        console.log(person);
-        return <div>hi</div>
+    } else if (isOnFile) {
+        // console.log(person);
+        return (<Traits />);
+    } else {
+        // console.log(person);
+        return (
+            <div>
+                <h2>
+                    Thank you for submitting your information!
+                </h2>
+                <h2>
+                    Your information can now be used when building a team!
+                </h2>
+            </div>
+        );
     }
 }
 
