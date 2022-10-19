@@ -2,7 +2,7 @@ import React from 'react';
 import CheckList from './CheckList.js'
 
 const TeamMember = () => {  
-    var techList = [];
+    var techList = []; // Look at skills for an example as to how to use this var
 
     /*
         Callback function for when the user makes changes to the CheckList.
