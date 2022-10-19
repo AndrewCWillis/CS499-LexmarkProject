@@ -6,15 +6,18 @@ React Frontend: `team_builder_react`
 
 Django Backend: `team_builder_django`
 
-Python Virtual Environment: `py_venv`
+~~Python Virtual Environment: `py_venv`~~ TODO: .gitignore this file. Users will create their own venv.
 
 # Starting Django
-Before the Django server is started, a Python virtual environment must be created using `python -m venv py_venv`. Once created activate the virtual environment using `py_venv\Scripts\activate` (Windows). 
+Before the Django server is started, a Python virtual environment must be created using `python -m venv py_venv`. Once created activate the virtual environment using `py_venv\Scripts\activate` (Windows). ~~To exit python virtual environment `deactivate`~~
 
     python -m venv py_venv
     py_venv\Scripts\activate
 
-To exit python virtual environment `deactivate`
+Once the virtual environment is running, install the python dependencies located in the `py_requirements.txt` file. Once the requirements are installed the Django backend can be run.
+
+    pip install -r py_requirements.txt
+
 
 ### Run the Django Server
 Open a terminal in the team_builder_django directory (manage.py should be in the root), and execute this command;
