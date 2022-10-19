@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Stack from 'react-bootstrap/Stack';
@@ -44,7 +43,12 @@ function TeamList(props) {
                     return(
                     <ButtonGroup aria-label="Basic example" key={name} id = {name}>
                         <Button variant={props.type} size = "lg" className = 'memberName'>{name}</Button>
-                        <Button variant={props.type} size = "sm" onClick = {props.type == "info" ? removeHandler : addHandler} style = {props.type == "info" ? remove : assign}>{props.type == "info" ? 'X' : '+'}</Button>
+                        <Button variant={props.type}
+                        size = "sm"
+                        onClick = {props.type === "info" ? removeHandler : addHandler}
+                        style = {props.type === "info" ? remove : assign}>
+                            {props.type === "info" ? 'X' : '+'}
+                        </Button>
                     </ButtonGroup>
                     )
                 }

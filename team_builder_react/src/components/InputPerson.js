@@ -93,12 +93,13 @@ const InputPerson = () => {
 
     /*
         Component to get the technical skills of a user. It will display the
-        CheckList component as well as two buttons, Back and Continue.
+            CheckList component as well as two buttons, Back and Continue.
 
-        TODO: Update so that if user goes back from Trait input their previously
-            inputted skills are already filled in.
+        props: defaultSelectedList - an array of objects with the structure
+          { 'name' : string, 'id' : number }. These will be the already selected
+          values in the CheckList displayed by the Skills component.
      */
-    const Skills = () => {
+    const Skills = ({ defaultSelectedList }) => {
         // Non-state variable for holding changes to the selected values in the CheckList
         var skillsList = []
 
@@ -138,7 +139,10 @@ const InputPerson = () => {
             <Form className="mx-auto my-auto h-100">
                 <Form.Group className='mb-3' controlId='formTechSkills' >
                     <Form.Label>Enter Your Technical Skills</Form.Label>
-                    <CheckList SendToParent={GetInputFromCheckList}></CheckList>
+                    <CheckList 
+                        SendToParent={GetInputFromCheckList}
+                        defaultSelected={defaultSelectedList}
+                    />
                 </Form.Group>
                 <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
                     <Button disabled={false} onClick={HandleBack}>Back</Button>
@@ -178,6 +182,7 @@ const InputPerson = () => {
                 setPerson({...person, 'traits': parsedTraits});
 
                 // TODO: send person to back-end
+                // Don't forget to put the skills and traits in the correct structures
             } else {
                 document.getElementById("TraitsErrorMessage").className = "text-danger visible";
                 document.getElementById("TraitsErrorMessage").innerText = "Please upload a valid CSV file before submitting.";
@@ -311,7 +316,7 @@ const InputPerson = () => {
         return (<Name defaultFirstName={person.firstName} defaultLastName={person.lastName} />);
     } else if (isOnSkills) {
         // console.log(person);
-        return (<Skills />);
+        return (<Skills defaultSelectedList={person.skills}/>);
     } else if (isOnFile) {
         // console.log(person);
         return (<Traits />);
