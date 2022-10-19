@@ -201,7 +201,7 @@ const InputPerson = () => {
         */
         const HandleFileUpload = (data, fileInfo, originalFile) => {
             var foundMatch = false;
-            var undefinedTrait = false;
+            var traitValueError = false;
 
             // Loop through all the records looking for one with a name that EXACTLY
             //  matches the one input thus far.
@@ -225,7 +225,7 @@ const InputPerson = () => {
                     // If any of the traits could not be read, tell the user
                     // https://stackoverflow.com/questions/19324294/equivalent-of-pythons-keyerror-exception-in-javascript
                     if (parsedTraits.includes(undefined)) {
-                        undefinedTrait = true;
+                        traitValueError = true;
                         parsedTraits = [] // reset the traits array
                         
                         document.getElementById("TraitsErrorMessage").className = "text-danger visible";
@@ -234,6 +234,21 @@ const InputPerson = () => {
                         
                         return;
                     }
+
+                    // For each trait value we found, check that it is numeric
+                    parsedTraits.forEach((traitValue) => {
+                        // If the trait value is not a number, say that we cannot parse it
+                        if (typeof(traitValue) !== 'number') {
+                            traitValueError = true;
+                            parsedTraits = [] // reset the traits array
+
+                            document.getElementById("TraitsErrorMessage").className = "text-danger visible";
+                            document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value for one or more of the BP10 traits for the previously inputted name.";
+                            document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
+                            
+                            return;
+                        }
+                    });
                 }
             });
 
@@ -242,11 +257,11 @@ const InputPerson = () => {
                 then display an error message. If the person can be found,
                 tell the user the input is valid.
             */
-            if (!foundMatch && !undefinedTrait) {
+            if (!foundMatch && !traitValueError) {
                 document.getElementById("TraitsErrorMessage").className = "text-danger visible";
                 document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found.";
                 document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
-            } else if (foundMatch && !undefinedTrait){
+            } else if (foundMatch && !traitValueError){
                 document.getElementById("TraitsErrorMessage").className = "text-danger invisible";
                 document.getElementById("react-csv-reader-input").className = "form-control is-valid";
             }
