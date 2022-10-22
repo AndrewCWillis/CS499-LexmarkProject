@@ -5,6 +5,7 @@ import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react
 import { useState } from 'react';
 
 import CheckList from '../components/CheckList';
+import { SendPersonToBackEnd } from '../utilities/API_Interface';
 
 const InputPerson = () => {
     // State to store the person's information
@@ -158,6 +159,16 @@ const InputPerson = () => {
      */
     const Traits = () => {
         var parsedTraits = [];
+        const traitNames = ['confidence',
+                            'delegator',
+                            'determination',
+                            'disruptor',
+                            'independence',
+                            'knowledge',
+                            'profitibility',
+                            'relationship',
+                            'risk',
+                            'selling'];
 
         /*
             Callback function for when the user clicks the "Back" button.
@@ -178,11 +189,13 @@ const InputPerson = () => {
             // If traits have been collected
             if (parsedTraits.length === 10) {
                 setIsOnFile(false);
+                var oldPersonValue = person;
 
-                setPerson({...person, 'traits': parsedTraits});
+                // I believe that this should use the correct values, but I am
+                //  not 100% sure since React might update the state at any point.
+                SendPersonToBackEnd({...oldPersonValue, 'traits': parsedTraits});
 
-                // TODO: send person to back-end
-                // Don't forget to put the skills and traits in the correct structures
+                setPerson({...oldPersonValue, 'traits': parsedTraits});
             } else {
                 document.getElementById("TraitsErrorMessage").className = "text-danger visible";
                 document.getElementById("TraitsErrorMessage").innerText = "Please upload a valid CSV file before submitting.";
@@ -206,7 +219,7 @@ const InputPerson = () => {
         */
         const HandleFileUpload = (data, fileInfo, originalFile) => {
             var foundMatch = false;
-            var traitValueError = false;
+            var traitScoreError = false;
 
             // Loop through all the records looking for one with a name that EXACTLY
             //  matches the one input thus far.
@@ -215,22 +228,21 @@ const InputPerson = () => {
                 if (record['First Name'] === person.firstName && record['Last Name'] === person.lastName) {
                     foundMatch = true;
 
-                    // Put the trait values into an array.
-                    parsedTraits.push(record['Confidence']);
-                    parsedTraits.push(record['Delegator']);
-                    parsedTraits.push(record['Determination']);
-                    parsedTraits.push(record['Disruptor']);
-                    parsedTraits.push(record['Independence']);
-                    parsedTraits.push(record['Knowledge']);
-                    parsedTraits.push(record['Profitibility']);
-                    parsedTraits.push(record['Relationship']);
-                    parsedTraits.push(record['Risk']);
-                    parsedTraits.push(record['Selling']);
+                    // Put the trait values into an array
+                    for (var key in record) {
+                        if (traitNames.includes(key.toLowerCase())){
+                            parsedTraits.push({
+                                name: key.toLowerCase(),
+                                score: record[key]
+                            });
+                        }
+                    }
 
                     // If any of the traits could not be read, tell the user
                     // https://stackoverflow.com/questions/19324294/equivalent-of-pythons-keyerror-exception-in-javascript
-                    if (parsedTraits.includes(undefined)) {
-                        traitValueError = true;
+                    if (parsedTraits.length !== traitNames.length) {
+                        console.log(parsedTraits.length);
+                        traitScoreError = true;
                         parsedTraits = [] // reset the traits array
                         
                         document.getElementById("TraitsErrorMessage").className = "text-danger visible";
@@ -240,11 +252,11 @@ const InputPerson = () => {
                         return;
                     }
 
-                    // For each trait value we found, check that it is numeric
-                    parsedTraits.forEach((traitValue) => {
-                        // If the trait value is not a number, say that we cannot parse it
-                        if (typeof(traitValue) !== 'number') {
-                            traitValueError = true;
+                    // For each trait we found, check that it is numeric
+                    parsedTraits.forEach((trait) => {
+                        // If the trait score is not a number, say that we cannot parse it
+                        if (typeof(trait.score) !== 'number') {
+                            traitScoreError = true;
                             parsedTraits = [] // reset the traits array
 
                             document.getElementById("TraitsErrorMessage").className = "text-danger visible";
@@ -262,11 +274,11 @@ const InputPerson = () => {
                 then display an error message. If the person can be found,
                 tell the user the input is valid.
             */
-            if (!foundMatch && !traitValueError) {
+            if (!foundMatch && !traitScoreError) {
                 document.getElementById("TraitsErrorMessage").className = "text-danger visible";
                 document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found.";
                 document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
-            } else if (foundMatch && !traitValueError){
+            } else if (foundMatch && !traitScoreError){
                 document.getElementById("TraitsErrorMessage").className = "text-danger invisible";
                 document.getElementById("react-csv-reader-input").className = "form-control is-valid";
             }
@@ -318,10 +330,10 @@ const InputPerson = () => {
         // console.log(person);
         return (<Skills defaultSelectedList={person.skills}/>);
     } else if (isOnFile) {
-        // console.log(person);
+        console.log(person);
         return (<Traits />);
     } else {
-        // console.log(person);
+        console.log(person);
         return (
             <div>
                 <h2>

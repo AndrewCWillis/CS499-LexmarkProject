@@ -18,6 +18,8 @@ const CheckList = ( { SendToParent, defaultSelected }) => {
   const skills = ['JavaScript', 'React', 'Python', 'HTML', 'Bootstrap', 'JQuery', 'DJango'];
   var options = skills.map((skill, index) => ({'name' : skill, 'id' : index}));
 
+  SendToParent(defaultSelected); // Default list the parent should have
+
   /*
     Callback function for when the user selects a new item.
   */
