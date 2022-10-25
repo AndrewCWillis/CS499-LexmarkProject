@@ -7,6 +7,10 @@ import { useState } from 'react';
 import CheckList from '../components/CheckList';
 import { SendPersonToBackEnd } from '../utilities/API_Interface';
 
+    /*
+        Component to the name, techincal skills, and BP10 traits of an employee
+            and send the info to the back-end.
+     */
 const InputPerson = () => {
     // State to store the person's information
     const [ person, setPerson ] = useState({
@@ -193,7 +197,7 @@ const InputPerson = () => {
 
                 // I believe that this should use the correct values, but I am
                 //  not 100% sure since React might update the state at any point.
-                SendPersonToBackEnd({...oldPersonValue, 'traits': parsedTraits});
+                SendPersonToBackEnd(1, {...oldPersonValue, 'traits': parsedTraits});
 
                 setPerson({...oldPersonValue, 'traits': parsedTraits});
             } else {

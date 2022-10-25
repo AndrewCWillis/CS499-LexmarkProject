@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-    baseURL: '127.0.0.0:0000'
+    baseURL: 'http://127.0.0.1:8000'
 });
 
 /*
@@ -35,13 +35,15 @@ const CheckListArrayToString = (listOfSkills) => {
         person and their information to the back-end, which will then store it in
         the database.
      
-    parameters: person - an object (or dictionary) to send to the back-end
-    ex: {
-            firstName: '',
-            lastName: '',
-            skills: [], each element is { name: string, id: int }
-            traits: [], each element is { name: string, score: int}
-        }
+    parameters: personID - unique integer ID for this team to be built
+            
+                person - an object (or dictionary) to send to the back-end
+                ex: {
+                        firstName: '',
+                        lastName: '',
+                        skills: [], each element is { name: string, id: int }
+                        traits: [], each element is { name: string, score: int}
+                    }
     
     returns: nothing
 
@@ -63,8 +65,9 @@ const CheckListArrayToString = (listOfSkills) => {
         "bpt_selling": 1.0
     }
 */
-export const SendPersonToBackEnd = (person) => {
+export const SendPersonToBackEnd = (personID, person) => {
     var objectToSend = {
+        id: personID,
         name_last: person.lastName,
         name_first: person.firstName,
         skills: ""
@@ -85,9 +88,11 @@ export const SendPersonToBackEnd = (person) => {
     SendTeamParameters takes the parameters by which a new team will be built as
         parameters to the function. This function will put the parameters into a
         JSON object and POST it to the back-end so it can start the process of
-        building a balanced team with those parameters
+        building a balanced team with those parameters.
      
-    parameters: teamSize - integer representing the number of team members the
+    parameters: teamID - unique integer ID for this team to be built
+    
+                teamSize - integer representing the number of team members the
                     built team should have.
 
                 techSkills - an array of objects. Each element is { name: string, id: int }
@@ -103,12 +108,34 @@ export const SendPersonToBackEnd = (person) => {
         "skills": comma separated string of skills
     }
 */
-export const SendTeamParameters = (teamSizeParam, techSkills) => {
+export const SendTeamParameters = (teamID, teamSizeParam, techSkills) => {
     var objectToSend = {
+        id: teamID,
         teamSize: teamSizeParam,
         skills: CheckListArrayToString(techSkills)
     };
 
     console.log(objectToSend);
     //axiosInstance.post('/requestedteams', objectToSend);
+}
+
+/*
+    GetValidTeam is an asynchronous function that will make an API call to
+        the back-end to get the built team from a previous POST to build a team.
+        The JSON response will be returned.
+     
+    parameters: teamID - unique integer ID for the built team to get
+
+    https://stackoverflow.com/questions/48980380/returning-data-from-axios-api#:~:text=The%20function%20can%20be%20written%20more%20succinctly%3A
+
+    returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
+             if there was an error in the request, then the Axios error.
+*/
+export const GetValidTeam = async (teamID) => {
+    try {
+        const response = await axiosInstance.get('/valid_teams/' + teamID.toString());
+        return response;
+    } catch (error) {
+        return error;
+    }
 }
