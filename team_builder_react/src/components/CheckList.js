@@ -1,4 +1,5 @@
 import React from 'react';
+import {useState,useEffect} from 'react';
 import Multiselect from 'multiselect-react-dropdown'; // https://www.npmjs.com/package/multiselect-react-dropdown
 
 /*
@@ -17,7 +18,7 @@ import Multiselect from 'multiselect-react-dropdown'; // https://www.npmjs.com/p
 const CheckList = ( { SendToParent, defaultSelected }) => {
   const skills = ['JavaScript', 'React', 'Python', 'HTML', 'Bootstrap', 'JQuery', 'DJango'];
   var options = skills.map((skill, index) => ({'name' : skill, 'id' : index}));
-
+  const [data,setData]=useState([]);
   /*
     Callback function for when the user selects a new item.
   */
@@ -34,11 +35,31 @@ const CheckList = ( { SendToParent, defaultSelected }) => {
     // console.log("Here")
     SendToParent(selectedList)
   }
+  const getData=()=>{
+    fetch('techSkills.json'
+    ,{
+      headers : { 
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+       }
+    }
+    )
+      .then(function(response){
+        console.log(response)
+        return response.json();
+      })
+      .then(function(myJson) {
+        console.log(myJson);
+        setData(myJson)
+      });
+  }
+  useEffect(()=>{
+    getData()
+  },[]);
 
-    
   return(
     <Multiselect
-      options={options} // Options to display in the dropdown
+      options={data["Tech_Skills"]?.map((skill, index) => ({'name' : skill, 'id' : index}))} // Options to display in the dropdown
       onSelect={onSelect} // Function will trigger on select event
       onRemove={onRemove} // Function will trigger on remove event
       displayValue="name" // Property name to display in the dropdown options
