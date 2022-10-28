@@ -37,6 +37,7 @@ class TeamSize extends Component {
         }
 
     }
+
     handleClick(event){
         event.preventDefault()
         var amt = document.getElementById("teamSize").value
@@ -46,12 +47,9 @@ class TeamSize extends Component {
                 submit: false,
                 num : amt
               });
-            console.log("ACCEPTED!")
-
-        }else{
-            console.log("REJECTED!")
         }
     }
+
     handleSubmit(event){
         event.preventDefault()
         this.setState({
@@ -60,6 +58,7 @@ class TeamSize extends Component {
             num : this.state.num
           });
     }
+
     render(){
         if ((this.state.valid) && (this.state.num !== 0)){
             if (this.state.submit){
@@ -68,10 +67,12 @@ class TeamSize extends Component {
                 );
             }else{
                 return(
-                    <>
+                    <div>
                         <TeamMember key = {0} />
-                        <Button  variant="primary" href='/build' onClick = {this.handleSubmit} className = "col-2">Build</Button>
-                    </>
+                        <div style = {{marginTop: "15px"}}>
+                            <Button  variant="primary" href='/build' onClick = {this.handleSubmit} className = "col-2">Build</Button>
+                        </div>
+                    </div>
                 );
             }
         }else{
