@@ -16,14 +16,14 @@ const TeamMember = () => {
 
     return(
     <>
-        <form>
-            <div className="container">
-                <div className = "form-label">
-                    Please, Enter the Desired Technical Skills for this Position:
-                </div>
-                {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
-            </div>    
-        </form>
+        
+        <div>
+            <div>
+                Please, Enter the Desired Technical Skills for this Position:
+            </div>
+            {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
+        </div>    
+        
     </>
     );
 }

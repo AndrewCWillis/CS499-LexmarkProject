@@ -1,4 +1,5 @@
 import React from 'react';
+import techSkills from '../data/techSkills.json';
 import Multiselect from 'multiselect-react-dropdown'; // https://www.npmjs.com/package/multiselect-react-dropdown
 
 /*
@@ -17,7 +18,6 @@ import Multiselect from 'multiselect-react-dropdown'; // https://www.npmjs.com/p
 const CheckList = ( { SendToParent, defaultSelected }) => {
   const skills = ['JavaScript', 'React', 'Python', 'HTML', 'Bootstrap', 'JQuery', 'DJango'];
   var options = skills.map((skill, index) => ({'name' : skill, 'id' : index}));
-
   /*
     Callback function for when the user selects a new item.
   */
@@ -35,10 +35,9 @@ const CheckList = ( { SendToParent, defaultSelected }) => {
     SendToParent(selectedList)
   }
 
-    
   return(
     <Multiselect
-      options={options} // Options to display in the dropdown
+      options={techSkills["Tech_Skills"].map((skill, index) => ({'name' : skill, 'id' : index}))} // Options to display in the dropdown
       onSelect={onSelect} // Function will trigger on select event
       onRemove={onRemove} // Function will trigger on remove event
       displayValue="name" // Property name to display in the dropdown options
