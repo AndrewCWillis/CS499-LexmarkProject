@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// https://stackoverflow.com/questions/48960497/http-get-request-with-axios-gets-sent-with-the-local-host-ip-at-the-beginning-of#:~:text=You%20can%20easily%20fix%20it%20by%20adding%20the%20http%3A//%20prefix%3A
 const axiosInstance = axios.create({
     baseURL: 'http://127.0.0.1:8000'
 });
@@ -30,26 +31,24 @@ const CheckListArrayToString = (listOfSkills) => {
 }
 
 /*
-    SendPersonToBackEnd takes an object as a parameter and sends that object to 
-        the back-end as JSON in an HTTP request. This function will post a new
-        person and their information to the back-end, which will then store it in
-        the database.
+    SendPersonToBackEnd is an asynchronous function that takes an object as a
+        parameter and sends that object to the back-end as JSON in an HTTP
+        request. This function will post a new person and their information to
+        the back-end, which will then store it in the database.
      
-    parameters: personID - unique integer ID for this team to be built
-            
-                person - an object (or dictionary) to send to the back-end
+    parameters: person - an object (or dictionary) to send to the back-end
                 ex: {
                         firstName: '',
                         lastName: '',
                         skills: [], each element is { name: string, id: int }
-                        traits: [], each element is { name: string, score: int}
+                        traits: [], each element is { name: string, score: int }
                     }
     
-    returns: nothing
+    returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
+             if there was an error in the request, then the Axios error.
 
     What will actually be sent to the back-end:
     {
-        "id": 49902, Do we need?
         "name_last": "Bar",
         "name_first": "Foo",
         "skills": "Python, Django",
@@ -65,9 +64,8 @@ const CheckListArrayToString = (listOfSkills) => {
         "bpt_selling": 1.0
     }
 */
-export const SendPersonToBackEnd = (personID, person) => {
+export const SendPersonToBackEnd = async (person) => {
     var objectToSend = {
-        id: personID,
         name_last: person.lastName,
         name_first: person.firstName,
         skills: ""
@@ -80,43 +78,53 @@ export const SendPersonToBackEnd = (personID, person) => {
         objectToSend["bpt_" + trait.name] = trait.score;
     })
 
-    console.log(objectToSend);
-    //axiosInstance.post('/employees', objectToSend);
+    // console.log(objectToSend);
+    try {
+        const response = await axiosInstance.post('/employees', objectToSend);
+        return response;
+    } catch (error) {
+        return error;
+    }
 }
 
 /*
-    SendTeamParameters takes the parameters by which a new team will be built as
-        parameters to the function. This function will put the parameters into a
-        JSON object and POST it to the back-end so it can start the process of
-        building a balanced team with those parameters.
+    SendTeamParameters is an asynchronous function that takes the parameters by
+        which a new team will be built as parameters to the function. This
+        function will put the parameters into a JSON object and POST it to the
+        back-end so it can start the process of building a balanced team with
+        those parameters.
      
-    parameters: teamID - unique integer ID for this team to be built
-    
-                teamSize - integer representing the number of team members the
+    parameters: teamSize - integer representing the number of team members the
                     built team should have.
 
                 techSkills - an array of objects. Each element is { name: string, id: int }
                     (as given by the CheckList component) and represents a
                     technical skill that the build team should posses, if possible.
 
-    returns: nothing
+    returns: if no server errors, a Promise that is the id of the newly created team
+             if there was an error in the request, -1 and the error is printed to the console.
 
     What will actually be sent to the back-end:
     {
-        "id": int, Do we need?
         "teamSize": int
         "skills": comma separated string of skills
     }
 */
-export const SendTeamParameters = (teamID, teamSizeParam, techSkills) => {
+export const SendTeamParameters = async (teamSizeParam, techSkills) => {
     var objectToSend = {
-        id: teamID,
         teamSize: teamSizeParam,
         skills: CheckListArrayToString(techSkills)
     };
 
-    console.log(objectToSend);
-    //axiosInstance.post('/requestedteams', objectToSend);
+    // console.log(objectToSend);
+    // TODO: Test this when the back-end can be queried with values
+    try {
+        const response = await axiosInstance.post('/requestedteams', objectToSend);
+        return response.data.id;
+    } catch (error) {
+        console.log(error);
+        return -1;
+    }
 }
 
 /*
