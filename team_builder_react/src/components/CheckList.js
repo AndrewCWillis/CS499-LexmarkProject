@@ -16,8 +16,6 @@ import Multiselect from 'multiselect-react-dropdown'; // https://www.npmjs.com/p
   https://www.geeksforgeeks.org/how-to-pass-data-from-child-component-to-its-parent-in-reactjs/
 */
 const CheckList = ( { SendToParent, defaultSelected }) => {
-  const skills = ['JavaScript', 'React', 'Python', 'HTML', 'Bootstrap', 'JQuery', 'DJango'];
-  var options = skills.map((skill, index) => ({'name' : skill, 'id' : index}));
   /*
     Callback function for when the user selects a new item.
   */
