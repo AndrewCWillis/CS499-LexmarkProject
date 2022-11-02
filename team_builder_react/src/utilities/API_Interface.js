@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { Axios } from "axios";
 
 // https://stackoverflow.com/questions/48960497/http-get-request-with-axios-gets-sent-with-the-local-host-ip-at-the-beginning-of#:~:text=You%20can%20easily%20fix%20it%20by%20adding%20the%20http%3A//%20prefix%3A
 const axiosInstance = axios.create({
@@ -45,7 +45,7 @@ const CheckListArrayToString = (listOfSkills) => {
                     }
     
     returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
-             if there was an error in the request, then the Axios error.
+             if there was an error in the request, then the Axios error in a Promise.
 
     What will actually be sent to the back-end:
     {
@@ -102,7 +102,7 @@ export const SendPersonToBackEnd = async (person) => {
                     technical skill that the build team should posses, if possible.
 
     returns: if no server errors, a Promise that is the id of the newly created team
-             if there was an error in the request, -1 and the error is printed to the console.
+             if there was an error in the request, -1 as a Promise and the error is printed to the console.
 
     What will actually be sent to the back-end:
     {
@@ -137,12 +137,102 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
     https://stackoverflow.com/questions/48980380/returning-data-from-axios-api#:~:text=The%20function%20can%20be%20written%20more%20succinctly%3A
 
     returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
-             if there was an error in the request, then the Axios error.
+             if there was an error in the request, then the Axios error in a Promise.
 */
 export const GetValidTeam = async (teamID) => {
     try {
         const response = await axiosInstance.get('/valid_teams/' + teamID.toString());
         return response;
+    } catch (error) {
+        return error;
+    }
+}
+
+/*
+    GetEmployee is an asynchronous function that takes the ID of the employee whose
+        information you wish to retrieve. This function will make a GET request
+        to the back-end to get that employee's profile/information.
+     
+    parameters: employeeID - integer representing the unique ID that database
+                    uses to identify an employee's record
+
+    returns: if no server errors, a Promise that is the data of the response from the server (https://axios-http.com/docs/res_schema).
+            {
+                "id": int,
+                "name_last": string,
+                "name_first": string,
+                "skills": string,
+                "bpt_confidence": int,
+                "bpt_delegator": int,
+                "bpt_determination": int,
+                "bpt_disruptor": int,
+                "bpt_independence": int,
+                "bpt_knowledge": int,
+                "bpt_profitability": int,
+                "bpt_relationship": int,
+                "bpt_risk": int,
+                "bpt_selling": int
+            }
+
+             if there was an error in the request, then the Axios error in a Promise.
+*/
+export const GetEmployee = async (employeeID) => {
+    // TODO: Test this when the back-end can be queried with values
+    try {
+        const response = await axiosInstance.get('/employees/' + employeeID.toString());
+        return response.data;
+    } catch (error) {
+        return error;
+    }
+}
+
+/*
+    GetEmployeeList is an asynchronous function that takes a list of ID's of the
+        employees whose information you wish to retrieve. This function will make
+        GET requests to the back-end to get each employee's profile/information.
+     
+    parameters: employeeIDList - list of integers where each element is an
+                    integer representing the unique ID that database
+                    uses to identify an employee's record
+
+    returns: if no server errors, a Promise that a list of objects where each 
+                element is an employee's information.
+            [{
+                "id": int,
+                "name_last": string,
+                "name_first": string,
+                "skills": string,
+                "bpt_confidence": int,
+                "bpt_delegator": int,
+                "bpt_determination": int,
+                "bpt_disruptor": int,
+                "bpt_independence": int,
+                "bpt_knowledge": int,
+                "bpt_profitability": int,
+                "bpt_relationship": int,
+                "bpt_risk": int,
+                "bpt_selling": int
+            }, ...]
+             if there was an error in the request, then the Axios error in a Promise.
+*/
+export const GetEmployeeList = async (employeeIDList) => {
+    // TODO: Test this when the back-end can be queried with values
+    try {
+        listOfEmployees = []
+
+        // Loop through all the id's and get the employee that is associated with them
+        employeeIDList.forEach(async (id) => {
+            const employee = GetEmployee(id);
+            
+            // If the response was an error, just return the error
+            if (axios.isAxiosError(employee)){
+                return employee;
+            }
+
+            listOfEmployees.push(GetEmployee(id));
+        });
+        
+        return listOfEmployees;
     } catch (error) {
         return error;
     }
