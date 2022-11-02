@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios";
+import axios from "axios";
 
 // https://stackoverflow.com/questions/48960497/http-get-request-with-axios-gets-sent-with-the-local-host-ip-at-the-beginning-of#:~:text=You%20can%20easily%20fix%20it%20by%20adding%20the%20http%3A//%20prefix%3A
 const axiosInstance = axios.create({
@@ -65,6 +65,8 @@ const CheckListArrayToString = (listOfSkills) => {
     }
 */
 export const SendPersonToBackEnd = async (person) => {
+    console.log("SendPersonToBackEndTop");
+    console.log(person)
     var objectToSend = {
         name_last: person.lastName,
         name_first: person.firstName,
@@ -72,13 +74,14 @@ export const SendPersonToBackEnd = async (person) => {
     };
 
     // Add the skill name for each skill the user selected
-    objectToSend.skills = CheckListArrayToString(person.skills);
+    objectToSend.skills = await CheckListArrayToString(person.skills);
 
     person.traits.forEach(trait => {
         objectToSend["bpt_" + trait.name] = trait.score;
     })
 
-    // console.log(objectToSend);
+    console.log("SendPersonToBackEndBottom");
+    console.log(objectToSend);
     try {
         const response = await axiosInstance.post('/employees', objectToSend);
         return response;
@@ -176,7 +179,7 @@ export const GetValidTeam = async (teamID) => {
 
              if there was an error in the request, then the Axios error in a Promise.
 */
-export const GetEmployee = async (employeeID) => {
+const GetEmployee = async (employeeID) => {
     // TODO: Test this when the back-end can be queried with values
     try {
         const response = await axiosInstance.get('/employees/' + employeeID.toString());
@@ -217,23 +220,20 @@ export const GetEmployee = async (employeeID) => {
 */
 export const GetEmployeeList = async (employeeIDList) => {
     // TODO: Test this when the back-end can be queried with values
-    try {
-        listOfEmployees = []
+    
+    var listOfEmployees = [];
 
-        // Loop through all the id's and get the employee that is associated with them
-        employeeIDList.forEach(async (id) => {
-            const employee = GetEmployee(id);
-            
-            // If the response was an error, just return the error
-            if (axios.isAxiosError(employee)){
-                return employee;
-            }
-
-            listOfEmployees.push(GetEmployee(id));
-        });
+    // Loop through all the id's and get the employee that is associated with them
+    employeeIDList.forEach(async (id) => {
+        const employee = await GetEmployee(id);
         
-        return listOfEmployees;
-    } catch (error) {
-        return error;
-    }
+        // If the response was an error, just return the error
+        if (axios.isAxiosError(employee)){
+            return employee;
+        }
+
+        listOfEmployees.push(GetEmployee(id));
+    });
+    
+    return listOfEmployees;
 }
