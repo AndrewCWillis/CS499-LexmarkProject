@@ -65,8 +65,6 @@ const CheckListArrayToString = (listOfSkills) => {
     }
 */
 export const SendPersonToBackEnd = async (person) => {
-    console.log("SendPersonToBackEndTop");
-    console.log(person)
     var objectToSend = {
         name_last: person.lastName,
         name_first: person.firstName,
@@ -80,10 +78,8 @@ export const SendPersonToBackEnd = async (person) => {
         objectToSend["bpt_" + trait.name] = trait.score;
     })
 
-    console.log("SendPersonToBackEndBottom");
-    console.log(objectToSend);
     try {
-        const response = await axiosInstance.post('/employees', objectToSend);
+        const response = await axiosInstance.post('/employees/', objectToSend);
         return response;
     } catch (error) {
         return error;
@@ -119,10 +115,8 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
         skills: CheckListArrayToString(techSkills)
     };
 
-    // console.log(objectToSend);
-    // TODO: Test this when the back-end can be queried with values
     try {
-        const response = await axiosInstance.post('/requestedteams', objectToSend);
+        const response = await axiosInstance.post('/requested_teams/', objectToSend);
         return response.data.id;
     } catch (error) {
         console.log(error);
@@ -220,7 +214,6 @@ const GetEmployee = async (employeeID) => {
 */
 export const GetEmployeeList = async (employeeIDList) => {
     // TODO: Test this when the back-end can be queried with values
-    
     var listOfEmployees = [];
 
     // Loop through all the id's and get the employee that is associated with them

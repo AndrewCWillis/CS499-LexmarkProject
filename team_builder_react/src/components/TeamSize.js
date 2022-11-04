@@ -3,6 +3,7 @@ import Form from 'react-bootstrap/Form';
 import React, { Component, useState} from 'react';
 import CheckList from '../components/CheckList.js';
 import Results from '../components/Results.js';
+import { GetEmployeeList, GetValidTeam, SendTeamParameters } from '../utilities/API_Interface.js';
 
 const TeamSize = () => {
 
@@ -43,6 +44,21 @@ const TeamSize = () => {
     const handleSubmit = (event) =>{
         event.preventDefault()
         setSubmit(true)
+
+        SendTeamParameters(num, techList)
+        .then((id) => {
+            console.log("Response ID: " + id);
+
+            GetValidTeam(id)
+            .then((response) => {
+                console.log("Team Response: " + response);
+
+                GetEmployeeList(response.data)
+                .then((team) => {
+                    console.log("Response for getting employee: " + team);
+                })
+            })
+        });
     }
 
     /*

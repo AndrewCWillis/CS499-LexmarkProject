@@ -17,6 +17,8 @@ const InputPerson = () => {
         traits: []
     });
 
+    const [ backEndResponse, setBackEndResponse ] = useState({});
+
     // Boolean states represented which input so currently show the user
     const [ isOnName, setIsOnName ] = useState(true);
     const [ isOnSkills, setIsOnSkills ] = useState(false);
@@ -44,7 +46,8 @@ const InputPerson = () => {
         return (<Traits setIsOnSkills={setIsOnSkills} 
                         setIsOnFile={setIsOnFile} 
                         person={person} 
-                        setPerson={setPerson} />);
+                        setPerson={setPerson}
+                        setBackEndResponse={setBackEndResponse} />);
     } else {
         console.log(person);
         return (
@@ -54,7 +57,12 @@ const InputPerson = () => {
                 </h2>
                 <h2>
                     Your information can now be used when building a team!
+
+                    Response from back-end:
                 </h2>
+                <p>
+                    {JSON.stringify(backEndResponse)}
+                </p>
             </div>
         );
     }

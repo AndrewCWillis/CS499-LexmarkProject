@@ -13,8 +13,9 @@ import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react
             setIsOnFile - callback function to set the isOnFile boolean variable in InputPerson
             person - the person object varialbe in InputPerson
             setPerson - callback function to set the setPerson object variable in InputPerson
+            setBackEndResponse - callback function to set the backEndResponse variable in InputPerson
 */
-const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson }) => {
+const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndResponse }) => {
     var parsedTraits = [];
     const traitNames = ['confidence',
                         'delegator',
@@ -22,7 +23,7 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson }) => {
                         'disruptor',
                         'independence',
                         'knowledge',
-                        'profitibility',
+                        'profitability',
                         'relationship',
                         'risk',
                         'selling'];
@@ -50,7 +51,10 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson }) => {
 
             // I believe that this should use the correct values, but I am
             //  not 100% sure since React might update the state at any point.
-            SendPersonToBackEnd({...oldPersonValue, 'traits': parsedTraits});
+            SendPersonToBackEnd({...oldPersonValue, 'traits': parsedTraits})
+            .then((response) => {
+                setBackEndResponse(response);
+            });
 
             setPerson({...oldPersonValue, 'traits': parsedTraits});
         } else {
