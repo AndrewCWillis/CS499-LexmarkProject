@@ -61,7 +61,7 @@ const InputPerson = () => {
                     Response from back-end:
                 </h2>
                 <p>
-                    {JSON.stringify(backEndResponse)}
+                    {JSON.stringify(backEndResponse)} {/* https://kyleshevlin.com/how-to-render-an-object-in-react} */}
                 </p>
             </div>
         );

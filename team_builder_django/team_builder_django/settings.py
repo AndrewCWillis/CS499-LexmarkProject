@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders'
 ]
 
+# https://stackoverflow.com/questions/53124733/how-to-solve-cors-problem-of-my-django-api#:~:text=25-,You,-need%20to%20add
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
