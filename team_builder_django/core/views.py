@@ -1,9 +1,11 @@
-from django.shortcuts import render
-from django.http import HttpResponse
+from django.shortcuts import render 
+from django.http import request as request
 from rest_framework.views import APIView
 from . models import *
-from rest_framework.response import Response
+from rest_framework.response import *
+from rest_framework import status as httpStatus
 from . serializer import *
+
 
 # Create your views here.
 class Employees(APIView):
@@ -11,6 +13,13 @@ class Employees(APIView):
     serializerClass = EmployeeSerializer
 
     def get(self, request):
+        # Retrieve requested User ID to GET from the URI Parameters
+        getId = self.request.GET.get('id', None)
+
+        # Find (or attempt to) an Employee object with matching id
+        detail = Employee.objects.get(id=getId)
+
+        # Access all the Employee's data, and package it in JSON format for return
         detail = [
             {
                 "id": detail.id,
@@ -29,8 +38,7 @@ class Employees(APIView):
                 "bpt_relationship": detail.bpt_relationship,
                 "bpt_risk": detail.bpt_risk,
                 "bpt_selling": detail.bpt_selling
-            } 
-            for detail in Employee.objects.all()]
+            }]
 
         return Response(detail)
 
@@ -38,7 +46,11 @@ class Employees(APIView):
         serializer = EmployeeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        return Response(serializer.data)
+        print(request)
+        return Response(
+            data = serializer.data,
+            status = httpStatus.HTTP_200_OK
+        )
 
 class RequestedTeams(APIView):
 
@@ -59,4 +71,16 @@ class RequestedTeams(APIView):
         serializer = RequestedTeamSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        return Response(serializer.data)
+        return Response(
+            data = {"id": 2},
+            status = httpStatus.HTTP_200_OK
+            )
+    
+
+
+def createValidTeams(teamsize, skills):
+
+    # Search Employee objects to find all that have matching skills
+
+    # TODO: Determine what needs to be returned.. Single Id? Array of Ids?
+    return [1, 2, 3, 4, 5]
