@@ -138,7 +138,7 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
 */
 export const GetValidTeam = async (teamID) => {
     try {
-        const response = await axiosInstance.get('/valid_teams/' + teamID.toString());
+        const response = await axiosInstance.get('/valid_teams/?id=' + teamID.toString());
         return response;
     } catch (error) {
         return error;
@@ -176,7 +176,7 @@ export const GetValidTeam = async (teamID) => {
 const GetEmployee = async (employeeID) => {
     // TODO: Test this when the back-end can be queried with values
     try {
-        const response = await axiosInstance.get('/employees/' + employeeID.toString());
+        const response = await axiosInstance.get('/employees/?id=' + employeeID.toString());
         return response.data;
     } catch (error) {
         return error;
@@ -194,7 +194,7 @@ const GetEmployee = async (employeeID) => {
 
     returns: if no server errors, a Promise that a list of objects where each 
                 element is an employee's information.
-            [{
+            [[{
                 "id": int,
                 "name_last": string,
                 "name_first": string,
@@ -209,7 +209,7 @@ const GetEmployee = async (employeeID) => {
                 "bpt_relationship": int,
                 "bpt_risk": int,
                 "bpt_selling": int
-            }, ...]
+            }, ...], ...]
              if there was an error in the request, then the Axios error in a Promise.
 */
 export const GetEmployeeList = async (employeeIDList) => {
@@ -217,7 +217,7 @@ export const GetEmployeeList = async (employeeIDList) => {
     var listOfEmployees = [];
 
     // Loop through all the id's and get the employee that is associated with them
-    employeeIDList.forEach(async (id) => {
+    await employeeIDList.forEach(async (id) => {
         const employee = await GetEmployee(id);
         
         // If the response was an error, just return the error
@@ -225,8 +225,9 @@ export const GetEmployeeList = async (employeeIDList) => {
             return employee;
         }
 
-        listOfEmployees.push(GetEmployee(id));
+        listOfEmployees.push(employee);
     });
     
+    // console.log(listOfEmployees)
     return listOfEmployees;
 }

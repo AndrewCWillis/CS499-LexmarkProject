@@ -53,9 +53,11 @@ const TeamSize = () => {
             .then((response) => {
                 console.log("Team Response: " + response);
 
-                GetEmployeeList(response.data)
+                // GetEmployeeList(response.data)
+                GetEmployeeList([1, 2, 3])
                 .then((team) => {
-                    console.log("Response for getting employee: " + team);
+                    console.log("Response for getting employees:");
+                    console.log(team);
                 })
             })
         });
