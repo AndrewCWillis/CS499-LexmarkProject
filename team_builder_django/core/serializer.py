@@ -5,7 +5,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
         fields = [
-                'id',
+                #'id',
                 'name_first',
                 'name_last',
                 'skills',
@@ -24,8 +24,8 @@ class EmployeeSerializer(serializers.ModelSerializer):
 class RequestedTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = RequestedTeam
-        field = [
-            'id'
+        fields = [
+            #'id'
             'teamSize',
             'skills'
         ]
