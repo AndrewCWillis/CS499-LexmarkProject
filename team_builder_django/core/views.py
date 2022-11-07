@@ -77,7 +77,7 @@ class RequestedTeams(APIView):
     
 
 
-def createValidTeams(teamSize: int, skills: str) -> list:
+def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list:
     members = []
     for skill in skills.split(","):
         for e in Employee.objects.filter(skills__contains=skill.strip()):
@@ -100,9 +100,13 @@ def createValidTeams(teamSize: int, skills: str) -> list:
             )
 
     members.sort(reverse=True)
+    
+    # Building a possible team
     possible = Team()
     for i in range(teamSize):
         possible.add(members[i])
+    
+    # Checking to make sure the team is above threshold value
     
     # print(possible)
 
@@ -194,26 +198,36 @@ class Team:
         self.selling -= member.selling
         self.size -= 1
     
-    def isValid(self) -> bool:
-        if self.confidence / self.size < .5:
+    def isValid(self, threshold:float) -> bool:
+        ConfidenceThreshold = .42
+        DelegatorThreshold = .50
+        DeterminationThreshold = .56
+        DisruptorThreshold = .49
+        IndependenceThreshold = .50
+        KnowledgeThreshold = .53
+        ProfitabilityThreshold = .36
+        RelationshipThreshold = .44
+        RiskThreshold = .48
+        SellingThreshold = .40
+        if self.confidence < ConfidenceThreshold:
             return False
-        elif self.delegator / self.size < .5:
+        elif self.delegator < DelegatorThreshold:
             return False
-        elif self.determination / self.size < .5:
+        elif self.determination < DeterminationThreshold:
             return False
-        elif self.disruptor / self.size < .5:
+        elif self.disruptor < DisruptorThreshold:
             return False
-        elif self.independence / self.size < .5:
+        elif self.independence < IndependenceThreshold:
             return False
-        elif self.knowledge / self.size < .5:
+        elif self.knowledge < KnowledgeThreshold:
             return False
-        elif self.profitability / self.size < .5:
+        elif self.profitability < ProfitabilityThreshold:
             return False
-        elif self.relationship / self.size < .5:
+        elif self.relationship < RelationshipThreshold:
             return False
-        elif self.risk / self.size < .5:
+        elif self.risk < RiskThreshold:
             return False
-        elif self.selling / self.size < .5:
+        elif self.selling < SellingThreshold:
             return False
         return True
 
@@ -230,3 +244,6 @@ class Team:
         rStr += f"risk:          {self.risk/self.size}\n"
         rStr += f"selling:       {self.selling/self.size}\n"
         return rStr
+    
+    def __len__(self):
+        return self.size
