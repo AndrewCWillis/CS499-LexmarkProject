@@ -18,6 +18,7 @@ const InputPerson = () => {
     });
 
     const [ backEndResponse, setBackEndResponse ] = useState({});
+    const [ thankForSubmit, setThankForSubmit ] = useState("Your information can now be used when building a team! Response from back-end:");
 
     // Boolean states represented which input so currently show the user
     const [ isOnName, setIsOnName ] = useState(true);
@@ -47,18 +48,14 @@ const InputPerson = () => {
                         setIsOnFile={setIsOnFile} 
                         person={person} 
                         setPerson={setPerson}
-                        setBackEndResponse={setBackEndResponse} />);
+                        setBackEndResponse={setBackEndResponse}
+                        setThankForSubmit={setThankForSubmit} />);
     } else {
         console.log(person);
         return (
             <div>
                 <h2>
-                    Thank you for submitting your information!
-                </h2>
-                <h2>
-                    Your information can now be used when building a team!
-
-                    Response from back-end:
+                    {thankForSubmit}
                 </h2>
                 <p>
                     {JSON.stringify(backEndResponse)} {/* https://kyleshevlin.com/how-to-render-an-object-in-react} */}

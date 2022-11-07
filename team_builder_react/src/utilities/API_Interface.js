@@ -51,7 +51,7 @@ const CheckListArrayToString = (listOfSkills) => {
     {
         "name_last": "Bar",
         "name_first": "Foo",
-        "skills": "Python, Django",
+        "skills": "Python,Django",
         "bpt_confidence": 0.1,
         "bpt_delegator": 0.2,
         "bpt_determination": 0.3,
@@ -72,7 +72,7 @@ export const SendPersonToBackEnd = async (person) => {
     };
 
     // Add the skill name for each skill the user selected
-    objectToSend.skills = await CheckListArrayToString(person.skills);
+    objectToSend.skills = CheckListArrayToString(person.skills);
 
     person.traits.forEach(trait => {
         objectToSend["bpt_" + trait.name] = trait.score;
@@ -119,7 +119,6 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
         const response = await axiosInstance.post('/requested_teams/', objectToSend);
         return response.data.id;
     } catch (error) {
-        console.log(error);
         return -1;
     }
 }
@@ -210,10 +209,10 @@ const GetEmployee = async (employeeID) => {
                 "bpt_risk": int,
                 "bpt_selling": int
             }, ...], ...]
-             if there was an error in the request, then the Axios error in a Promise.
+             if there was an error in the request, then the Axios error in a Promise
+             in a single element list.
 */
 export const GetEmployeeList = async (employeeIDList) => {
-    // TODO: Test this when the back-end can be queried with values
     var listOfEmployees = [];
 
     // Loop through all the id's and get the employee that is associated with them
@@ -222,12 +221,11 @@ export const GetEmployeeList = async (employeeIDList) => {
         
         // If the response was an error, just return the error
         if (axios.isAxiosError(employee)){
-            return employee;
+            return [employee];
         }
 
         listOfEmployees.push(employee);
     });
     
-    // console.log(listOfEmployees)
     return listOfEmployees;
 }

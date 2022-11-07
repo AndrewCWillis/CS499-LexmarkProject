@@ -1,3 +1,5 @@
+import axios from "axios";
+
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
@@ -14,8 +16,9 @@ import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react
             person - the person object varialbe in InputPerson
             setPerson - callback function to set the setPerson object variable in InputPerson
             setBackEndResponse - callback function to set the backEndResponse variable in InputPerson
+            setThankForSubmit - callback function to set the thankForSubmit variable in InputPerson
 */
-const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndResponse }) => {
+const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndResponse, setThankForSubmit }) => {
     var parsedTraits = [];
     const traitNames = ['confidence',
                         'delegator',
@@ -53,6 +56,9 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndRespo
             //  not 100% sure since React might update the state at any point.
             SendPersonToBackEnd({...oldPersonValue, 'traits': parsedTraits})
             .then((response) => {
+                if (axios.isAxiosError(response)){
+                    setThankForSubmit("There was an error uploading your information. Please try again.")
+                }
                 setBackEndResponse(response);
             });
 
@@ -115,13 +121,13 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndRespo
 
                 // For each trait we found, check that it is numeric
                 parsedTraits.forEach((trait) => {
-                    // If the trait score is not a number, say that we cannot parse it
-                    if (typeof(trait.score) !== 'number') {
+                    // If the trait score is not a number [0, 100], say that we cannot parse it
+                    if (typeof(trait.score) !== 'number' || trait.score < 0 || trait.score > 100) {
                         traitScoreError = true;
                         parsedTraits = [] // reset the traits array
 
                         document.getElementById("TraitsErrorMessage").className = "text-danger visible";
-                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value for one or more of the BP10 traits for the previously inputted name.";
+                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value [0, 100] for one or more of the BP10 traits for the previously inputted name.";
                         document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
                         
                         return;
