@@ -22,9 +22,7 @@ class RequestedTeam(models.Model):
     teamSize = models.IntegerField()
     skills = models.TextField()
     
-# class Team(models.Model):
-    # Team Size?
-    # Array of Employee references?
-    # Balanced by BP10 bool?
-    # BP10 Talent Metrics?
-    # Date Created? Incase median values of talents shift OR an employee's talent(s) change
+class SentTeam(models.Model):
+    id = models.IntegerField(primary_key=True)
+    reqID = models.IntegerField()
+    team = models.TextField()
