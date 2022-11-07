@@ -78,6 +78,26 @@ class RequestedTeams(APIView):
             )
     
 
+class SentTeams(APIView):
+    
+    serializerClass = SentTeamSerializer
+
+    def get(self, request):
+        detail = [
+            {
+                'id':detail.id,
+                'reqID':detail.reqID,
+                'team':detail.team
+            }
+        for detail in SentTeam.objects.all()]
+        
+        return Response(detail)
+
+    def post(self, request):
+            serializer = SentTeamSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
+            return Response(serializer.data)
 
 def createValidTeams(teamSize: int, skills: str) -> list:
 
