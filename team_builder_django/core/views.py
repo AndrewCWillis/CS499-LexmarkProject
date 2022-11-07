@@ -71,16 +71,26 @@ class RequestedTeams(APIView):
         serializer = RequestedTeamSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            createValidTeams(RequestedTeam.objects.latest("id").teamSize, RequestedTeam.objects.latest("id").skills)
         return Response(
-            data = {"id": 2},
+            data = {"id": RequestedTeam.objects.latest("id").id},
             status = httpStatus.HTTP_200_OK
             )
     
 
 
-def createValidTeams(teamsize, skills):
+def createValidTeams(teamSize: int, skills: str) -> list:
 
     # Search Employee objects to find all that have matching skills
-
-    # TODO: Determine what needs to be returned.. Single Id? Array of Ids?
+    print(f"I was passed teamSize:{teamSize} and skills: {skills}")
+    members = []
+    for s in skills.split(","):
+        for e in Employee.objects.filter(skills__contains=s.strip()):
+            members.append(e)
+    
+    #for i in members:
+    #    print(i.name_first)
+    
+    
+    # Return a list of the ID's of the team members.
     return [1, 2, 3, 4, 5]
