@@ -20,6 +20,6 @@ from core.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('employees/', Employees.as_view(), name="employees"),
-    path('requested_teams/', RequestedTeams.as_view(), name="rqteams"),
-    path('sent_team', SentTeams.as_view(), name="sent_team")
+    path('requested_teams/', RequestedTeams.as_view(), name="requested_teams"),
+    path('sent_teams/', SentTeams.as_view(), name="sent_teams")
 ]

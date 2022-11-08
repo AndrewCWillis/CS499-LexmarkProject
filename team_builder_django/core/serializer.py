@@ -34,7 +34,7 @@ class SentTeamSerializer(serializers.ModelSerializer):
     class Meta:
         model = SentTeam
         fields = [ 
-            'id',
-            'reqID',
+            #'id',
+           'reqID',
             'team'
         ]

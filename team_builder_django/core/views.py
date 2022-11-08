@@ -1,5 +1,6 @@
 from django.shortcuts import render 
 from django.http import request as request
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from . models import *
 from rest_framework.response import *
@@ -13,32 +14,36 @@ class Employees(APIView):
     serializerClass = EmployeeSerializer
 
     def get(self, request):
-        # Retrieve requested User ID to GET from the URI Parameters
+        # Retrieve requested Employee ID to GET from the URI Parameters
         getId = self.request.GET.get('id', None)
+        
+        # This control flow allows use of the in-browser REST Framework view (permits a GET with no id URI parameter)
+        if(getId != None):
+            # Find (or attempt to) an Employee object with matching id
+            detail = Employee.objects.get(id=getId)
 
-        # Find (or attempt to) an Employee object with matching id
-        detail = Employee.objects.get(id=getId)
+            # Access all the Employee's data, and package it in JSON format for return
+            detail = {
+                    "id": detail.id,
+                    "name_first": detail.name_first,
+                    "name_last": detail.name_last,
+                    "skills": detail.skills,
+                    "bpt_confidence": detail.bpt_confidence,
+                    "bpt_delegator": detail.bpt_delegator,
+                    "bpt_determination": detail.bpt_determination,
+                    "bpt_disruptor": detail.bpt_disruptor,
+                    "bpt_independence": detail.bpt_independence,
+                    "bpt_knowledge": detail.bpt_knowledge,
+                    "bpt_profitability": detail.bpt_profitability,
+                    "bpt_relationship": detail.bpt_relationship,
+                    "bpt_risk": detail.bpt_risk,
+                    "bpt_selling": detail.bpt_selling
+                }
+            return Response(detail, status = httpStatus.HTTP_200_OK)
+        else:
+            return Response(status = httpStatus.HTTP_200_OK)
 
-        # Access all the Employee's data, and package it in JSON format for return
-        detail = [
-            {
-                "id": detail.id,
-                "name_first": detail.name_first,
-                "name_last": detail.name_last,
-                "skills": detail.skills,
-                "bpt_confidence": detail.bpt_confidence,
-                "bpt_delegator": detail.bpt_delegator,
-                "bpt_determination": detail.bpt_determination,
-                "bpt_disruptor": detail.bpt_disruptor,
-                "bpt_independence": detail.bpt_independence,
-                "bpt_knowledge": detail.bpt_knowledge,
-                "bpt_profitability": detail.bpt_profitability,
-                "bpt_relationship": detail.bpt_relationship,
-                "bpt_risk": detail.bpt_risk,
-                "bpt_selling": detail.bpt_selling
-            }]
-
-        return Response(detail)
+        
 
     def post(self, request):
         serializer = EmployeeSerializer(data=request.data)
@@ -65,14 +70,32 @@ class RequestedTeams(APIView):
 
         return Response(detail)
     
+    # Successful RequestedTeam POST results in CREATE of SentTeam & Response of created SentTeam's ID
     def post(self, request):
         serializer = RequestedTeamSerializer(data=request.data)
+
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            createValidTeams(RequestedTeam.objects.latest("id").teamSize, RequestedTeam.objects.latest("id").skills)
-        return Response(
-            data = {"id": RequestedTeam.objects.latest("id").id},
-            status = httpStatus.HTTP_200_OK
+
+            # Using the RequestedTeams' parameters, get a list of EmployeeIds that make a valid team
+            validTeam = createValidTeams(RequestedTeam.objects.latest("id").teamSize, RequestedTeam.objects.latest("id").skills)
+
+            print(validTeam)
+
+            # Create a SentTeam object
+            SentTeam.objects.create(
+                reqID = RequestedTeam.objects.latest("id").id,
+                team = repr(validTeam)
+            )
+
+            # Respond to POST with 200_OK and the Id of the created team
+            return Response(
+                data = {"id": SentTeam.objects.latest("id").id},     
+                status = httpStatus.HTTP_200_OK
+                )
+        else:
+            return Response(
+                status = httpStatus.HTTP_400_BAD_REQUEST
             )
     
 
@@ -81,15 +104,21 @@ class SentTeams(APIView):
     serializerClass = SentTeamSerializer
 
     def get(self, request):
-        detail = [
-            {
-                'id':detail.id,
-                'reqID':detail.reqID,
-                'team':detail.team
-            }
-        for detail in SentTeam.objects.all()]
+        # Retrieve requested SentTeam ID to GET from the URI Parameters
+        getId = self.request.GET.get('id', None)
         
-        return Response(detail)
+        # This control flow allows use of the in-browser REST Framework view (permits a GET with no id URI parameter)
+        if(getId != None):
+            # Find (or attempt to) an Employee object with matching id
+            detail = SentTeam.objects.get(id=getId)
+
+            # Access all the Employee's data, and package it in JSON format for return
+            detail = {
+                "team": eval(detail.team)
+            }
+            return Response(detail, status = httpStatus.HTTP_200_OK)
+        else:
+            return Response(status = httpStatus.HTTP_200_OK)
 
     def post(self, request):
             serializer = SentTeamSerializer(data=request.data)
@@ -138,8 +167,7 @@ def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list
     
     
     # Return a list of the ID's of the team members.
-    return [r.id for r in members[0:teamSize-1]]
-
+    return [r.id for r in members[0:teamSize]]
 
 class Member:
     def __init__(
