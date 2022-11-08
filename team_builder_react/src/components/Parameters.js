@@ -6,14 +6,16 @@ import Size from './Size.js';
 
 
 const Parameters = () => {
-
-    const [valid, setValid] = useState(false);
-    const [submit, setSubmit] = useState(false);
-    const [num, setNum] = useState(0); 
+    //-------------------------------------------------------------------------------------------------------
+    //THE CURATOR OF ALL COMPONENTS FOR THE BUILD PAGE
+    //-------------------------------------------------------------------------------------------------------
+    const [valid, setValid] = useState(false); //Valid input provided in Size component
+    const [submit, setSubmit] = useState(false);//Submit the technical skills parameter
+    const [num, setNum] = useState(0); //Team size provided from Size component
     var techList = []; // Look at skills for an example as to how to use this var 
    
 
-    const handleSubmit = (event) =>{
+    const handleSubmit = (event) =>{//has finished selecting all the parameters for team construction
         event.preventDefault()
         setSubmit(true)
     }
@@ -27,13 +29,15 @@ const Parameters = () => {
     const GetInputFromCheckList = (skills) => {
         techList = skills;
     }
-    
-    if ((valid) && (num !== 0)){
-        if (submit){
+    //-------------------------------------------------------------------------------------------------------
+    //CONSTRUCT THE VIEW 
+    //-------------------------------------------------------------------------------------------------------
+    if ((valid) && (num !== 0)){//Team size has been provided (not initial 0), and is valid
+        if (submit){//Technical Skills parameter has been provided
             return(
-                <Results num = {num} techList = {techList}/>
+                <Results num = {num} techList = {techList}/>//Results component will  interface with back end to fetch a team
             );
-        }else{
+        }else{//Load Technical skills checklist form
             return(
                 <div>
                     <div>
@@ -48,7 +52,7 @@ const Parameters = () => {
                 </div>
             );
         }
-    }else{
+    }else{//Load Team size form
 
         return(
             <Size setValid={setValid} setNum = {setNum} valid = {valid}/>
