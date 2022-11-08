@@ -6,10 +6,89 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Stack from 'react-bootstrap/Stack';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
+import axios from "axios";
+import { GetEmployeeList, GetValidTeam, SendTeamParameters } from '../utilities/API_Interface.js';
 
-const Results = () => {
-    const labels = ['Confidence', 'Delegator', 'Determination', 'Selling', 'Relationship', 'Disrupter', 'Knowledge', 'Independance', 'Profitability', 'Risk'];
+const Results = ({techList, num}) => {
+    const labels = ['Confidence', 'Delegator', 'Determination', 'Selling', 'Relationship', 'Disrupter', 'Knowledge', 'Independance', 'Profitability', 'Risk'];//Graph labels
+    //VV capture the status and data from interface with API
+    const [names, setNames] = useState([])
+    const [scores, setScores] = useState([])
+    const [teamResponse, setTeamResponse] = useState(false)
+    const [team, setTeam] = useState(false)
+    const [firstTime, setFirstTime] = useState(false)
+
+    loadData();
+    //-------------------------------------------------------------------------------------------------------
+    //PULL DATA IN FROM REMOTE 
+    //-------------------------------------------------------------------------------------------------------
+    function loadData(){
+
+      if (!firstTime ){//prevent multiple transmissions
+        setFirstTime(true)
+        
+        SendTeamParameters(num, techList)
+        .then((id) => {
+            console.log("Response ID: " + id);
+
+            GetValidTeam(id)
+            .then((response) => {
+                console.log("Team Response: " + response);
+
+                // GetEmployeeList(response.data)
+                GetEmployeeList([1, 2, 3])
+                .then((team) => {
+                    console.log("Response for getting employees:");
+                    console.log(team[1]);
+                    setTeam(team);
+                    if (team.length > 0){ //guard against division by 0 for average
+
+                      var temp = []//will contain the strings "name_last, name_first"
+                      var scoresTemp = 
+                      {"bpt_confidence":0, 
+                      "bpt_delegator":0,
+                      "bpt_determination":0,
+                      "bpt_selling":0,
+                      "bpt_relationship":0,
+                      "bpt_disruptor":0,
+                      "bpt_knowledge":0,
+                      "bpt_independence":0,
+                      "bpt_profitability":0,
+                      "bpt_risk":0}//same keys as the response member object
+
+                      team.forEach((member) => {
+                        //vv extract "last name, first name"
+                        if (! axios.isAxiosError(member)){//make sure the entry is not an error
+                          temp.push(`${member.name_last}, ${member.name_first}`);
+                          
+                          //vv accumulate scores  from each member to display the avergae in each talent cat.
+                          Object.keys(scoresTemp).forEach((key)=>{ //iterate over keys to extract values from response member
+                              scoresTemp[key] += member[key]
+                          });
+                        }
+                      });
+                      var scoresAvg = []
+                      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team.length))//compute average for each talent
+                    }
+                    //record extracted data as a state to update the view
+                    
+                    setNames(temp)
+                    setScores(scoresAvg)
+                    setTeamResponse(true)//notifiy the view that the data has been loaded and consumed
+                })
+            })
+            
+      })
+      
+
+    }
+
+  }
+    //-------------------------------------------------------------------------------------------------------
+    //CONSTRUCT THE VIEW
+    //-------------------------------------------------------------------------------------------------------
+    //THE GRAPH:
     const options = {
         responsive: true,
         plugins: {
@@ -28,7 +107,7 @@ const Results = () => {
         datasets: [
           {
             label: 'Team Talent Composite Score',
-            data: labels.map(() => [42, 50, 56, 40, 44, 49, 53, 50, 36, 48]),
+            data: scores.length > 0 ? scores : [0,0,0,0,0,0,0,0,0,0],
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
@@ -39,8 +118,8 @@ const Results = () => {
         height: "200px"
       };
 
-      const name = "Robert"; // will be dynamically determined later
-
+    const alert = <Alert variant={"danger"}>Error loading the data! </Alert>
+                    
     return (  
         <>
         <Navbar bg="dark"  variant="dark">
@@ -59,29 +138,8 @@ const Results = () => {
 
         <Container>
           <Row>
-            <Col>
-                <Navbar bg="light">
-                  <Container>
-                    <Navbar.Brand>Discovered Team:</Navbar.Brand>
-                  </Container>
-                </Navbar>
-            </Col>
-            <Col>
-                <Navbar bg="light">
-                  <Container>
-                    <Navbar.Brand>Supplemental Candidates for {name}:</Navbar.Brand>
-                  </Container>
-                </Navbar>
-            </Col>
-          </Row>
-          <Row>
             <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
-              <TeamList type = "info"/>
-
-              <div style={divider}></div>
-
-              <TeamList type = "secondary"/>
-              
+              {teamResponse ? <TeamList type = "info" names = {names}/> : alert}
             </Stack>
           </Row>
         </Container>
