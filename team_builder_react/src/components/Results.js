@@ -6,25 +6,23 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Stack from 'react-bootstrap/Stack';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+import Alert from 'react-bootstrap/Alert';
 import { GetEmployeeList, GetValidTeam, SendTeamParameters } from '../utilities/API_Interface.js';
 
 const Results = ({techList, num}) => {
     const labels = ['Confidence', 'Delegator', 'Determination', 'Selling', 'Relationship', 'Disrupter', 'Knowledge', 'Independance', 'Profitability', 'Risk'];
     const [names, setNames] = useState([])
+    const [scores, setScores] = useState([])
     const [teamResponse, setTeamResponse] = useState(false)
     const [team, setTeam] = useState(false)
     const [firstTime, setFirstTime] = useState(false)
     loadData();
-    const handleResponse = (team) =>{
-      setTeamResponse(true)
-      team[0].forEach((x,i) => names.append(`${x["name_last"]}, ${x["name_first"]}`))
-      
-    }
+
     function loadData(){
 
       if (!firstTime ){
         setFirstTime(true)
+        
         var id = SendTeamParameters(num, techList)
         .then((id) => {
             console.log("Response ID: " + id);
@@ -39,10 +37,36 @@ const Results = ({techList, num}) => {
                     console.log("Response for getting employees:");
                     console.log(team);
                     setTeam(team);
-                    setNames(team[0].forEach((x,i) => names.append(`${x["name_last"]}, ${x["name_first"]}`)))
+                    var temp = []
+                    var scoresTemp = [0,0,0,0,0,0,0,0,0,0]
+
+                    for (const member of team) {
+                      temp.push(`${member[0].name_last}, ${member[0].name_first}`);
+
+                      scoresTemp[0] += member[0].bpt_confidence
+                      scoresTemp[1] += member[0].bpt_delegator
+                      scoresTemp[2] += member[0].bpt_determination
+                      scoresTemp[3] += member[0].bpt_disruptor
+                      scoresTemp[4] += member[0].bpt_independence
+                      scoresTemp[5] += member[0].bpt_knowledge
+                      scoresTemp[6] += member[0].bpt_profitability
+                      scoresTemp[7] += member[0].bpt_relationship
+                      scoresTemp[8] += member[0].bpt_risk
+                      scoresTemp[9] += member[0].bpt_selling
+
+                      console.log(member[0].name_first)
+                    }
+                    scoresTemp.map(x=> x / team.length)
+                    //team.forEach((x,i) =>{ temp.push(`${x.name_last}, ${x.name_first}`)})
+                    setNames(temp)
+                    setScores(scoresTemp)
+                    setTeamResponse(true)
                 })
             })
+            
       })
+      
+
     }
 
   }
@@ -65,7 +89,7 @@ const Results = ({techList, num}) => {
         datasets: [
           {
             label: 'Team Talent Composite Score',
-            data: labels.map(() => [42, 50, 56, 40, 44, 49, 53, 50, 36, 48]),
+            data: scores.length > 0 ? scores : [42, 50, 56, 40, 44, 49, 53, 50, 36, 48],
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
@@ -95,22 +119,6 @@ const Results = ({techList, num}) => {
         </Navbar>
 
         <Container>
-          <Row>
-            <Col>
-                <Navbar bg="light">
-                  <Container>
-                    <Navbar.Brand>Discovered Team:</Navbar.Brand>
-                  </Container>
-                </Navbar>
-            </Col>
-            <Col>
-                <Navbar bg="light">
-                  <Container>
-                    <Navbar.Brand>Supplemental Candidates for {name}:</Navbar.Brand>
-                  </Container>
-                </Navbar>
-            </Col>
-          </Row>
           <Row>
             <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
               {teamResponse ? <TeamList type = "info" names = {names}/> : <div>Computing...</div>}

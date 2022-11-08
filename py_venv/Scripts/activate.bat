@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\Users\johnd\OneDrive\Documents\CS 499\branch 2\CS499-LexmarkProject\py_venv
+set VIRTUAL_ENV=C:\Users\dreww\OneDrive\Desktop\CS 499\CS499-LexmarkProject\py_venv
 
 if not defined PROMPT set PROMPT=$P$G
 

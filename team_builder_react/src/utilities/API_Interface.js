@@ -216,6 +216,7 @@ export const GetEmployeeList = async (employeeIDList) => {
     var listOfEmployees = [];
 
     // Loop through all the id's and get the employee that is associated with them
+    /*
     await employeeIDList.forEach(async (id) => {
         const employee = await GetEmployee(id);
         
@@ -226,6 +227,16 @@ export const GetEmployeeList = async (employeeIDList) => {
 
         listOfEmployees.push(employee);
     });
+    */
+    for (const id of employeeIDList) {
+        const employee = await GetEmployee(id);
+        
+        if (axios.isAxiosError(employee)){
+            return [employee];
+        }
+
+        listOfEmployees.push(employee);
+    }
     
     return listOfEmployees;
 }
