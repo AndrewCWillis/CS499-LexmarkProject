@@ -137,7 +137,7 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
 */
 export const GetValidTeam = async (teamID) => {
     try {
-        const response = await axiosInstance.get('/valid_teams/?id=' + teamID.toString());
+        const response = await axiosInstance.get('/sent_teams/?id=' + teamID.toString());
         return response;
     } catch (error) {
         return error;
@@ -216,23 +216,12 @@ export const GetEmployeeList = async (employeeIDList) => {
     var listOfEmployees = [];
 
     // Loop through all the id's and get the employee that is associated with them
-    /*
-    await employeeIDList.forEach(async (id) => {
-        const employee = await GetEmployee(id);
-        
-        // If the response was an error, just return the error
-        if (axios.isAxiosError(employee)){
-            return [employee];
-        }
 
-        listOfEmployees.push(employee);
-    });
-    */
     for (const id of employeeIDList) {
         const employee = await GetEmployee(id);
         
         if (axios.isAxiosError(employee)){
-            return [employee];
+            return employee;
         }
 
         listOfEmployees.push(employee);

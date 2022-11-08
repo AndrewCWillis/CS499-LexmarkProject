@@ -40,34 +40,42 @@ const Results = ({techList, num}) => {
                 GetEmployeeList([1, 2, 3])
                 .then((team) => {
                     console.log("Response for getting employees:");
-                    console.log(team);
+                    console.log(team[1]);
                     setTeam(team);
-                    var temp = []
-                    var scoresTemp = [0,0,0,0,0,0,0,0,0,0]
+                    if (team.length > 0){ //guard against division by 0 for average
 
-                    for (const member of team) {
-                      //vv extract "last name, first name"
-                      if (! axios.isAxiosError(member)){//make sure the entry is not an error
-                        temp.push(`${member[0].name_last}, ${member[0].name_first}`);
-                        //vv accumulate scores  from each member to display the avergae in each talent cat.
-                        scoresTemp[0] += member[0].bpt_confidence
-                        scoresTemp[1] += member[0].bpt_delegator
-                        scoresTemp[2] += member[0].bpt_determination
-                        scoresTemp[3] += member[0].bpt_selling
-                        scoresTemp[4] += member[0].bpt_relationship
-                        scoresTemp[5] += member[0].bpt_disruptor
-                        scoresTemp[6] += member[0].bpt_knowledge
-                        scoresTemp[7] += member[0].bpt_independence
-                        scoresTemp[8] += member[0].bpt_profitability
-                        scoresTemp[9] += member[0].bpt_risk
-                      }
+                      var temp = []//will contain the strings "name_last, name_first"
+                      var scoresTemp = 
+                      {"bpt_confidence":0, 
+                      "bpt_delegator":0,
+                      "bpt_determination":0,
+                      "bpt_selling":0,
+                      "bpt_relationship":0,
+                      "bpt_disruptor":0,
+                      "bpt_knowledge":0,
+                      "bpt_independence":0,
+                      "bpt_profitability":0,
+                      "bpt_risk":0}//same keys as the response member object
+
+                      team.forEach((member) => {
+                        //vv extract "last name, first name"
+                        if (! axios.isAxiosError(member)){//make sure the entry is not an error
+                          temp.push(`${member.name_last}, ${member.name_first}`);
+                          
+                          //vv accumulate scores  from each member to display the avergae in each talent cat.
+                          Object.keys(scoresTemp).forEach((key)=>{ //iterate over keys to extract values from response member
+                              scoresTemp[key] += member[key]
+                          });
+                        }
+                      });
+                      var scoresAvg = []
+                      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team.length))//compute average for each talent
                     }
-                    scoresTemp.map(x=> x / team.length)//compute average for each talent
-                    
                     //record extracted data as a state to update the view
+                    
                     setNames(temp)
-                    setScores(scoresTemp)
-                    setTeamResponse(true)
+                    setScores(scoresAvg)
+                    setTeamResponse(true)//notifiy the view that the data has been loaded and consumed
                 })
             })
             
@@ -99,7 +107,7 @@ const Results = ({techList, num}) => {
         datasets: [
           {
             label: 'Team Talent Composite Score',
-            data: scores.length > 0 ? scores : [42, 50, 56, 40, 44, 49, 53, 50, 36, 48],
+            data: scores.length > 0 ? scores : [0,0,0,0,0,0,0,0,0,0],
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
@@ -110,7 +118,7 @@ const Results = ({techList, num}) => {
         height: "200px"
       };
 
-      const alert = <Alert variant={"danger"}>Error loading the data! </Alert>
+    const alert = <Alert variant={"danger"}>Error loading the data! </Alert>
                     
     return (  
         <>
@@ -131,7 +139,7 @@ const Results = ({techList, num}) => {
         <Container>
           <Row>
             <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
-              {teamResponse ? <TeamList type = "info" names = {names}/> : {alert}}
+              {teamResponse ? <TeamList type = "info" names = {names}/> : alert}
             </Stack>
           </Row>
         </Container>

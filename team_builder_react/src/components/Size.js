@@ -1,5 +1,6 @@
 import React, { Component, useState} from 'react';
 import Form from 'react-bootstrap/Form';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 const Size = ({setValid, setNum, valid}) => {
     //-------------------------------------------------------------------------------------------------------
@@ -15,7 +16,7 @@ const Size = ({setValid, setNum, valid}) => {
             document.getElementById("ErrorMessage").className = "text-danger visible"
 
         }else{
-            if (input > 1){//team consists of atleast 2 people
+            if ((Number(input) > 1 ) && (Number.isInteger(Number(input)))){//team consists of atleast 2 people
                 setValid(true)//notify Parameters component
                 //vv Give User feedback 
                 event.target.className = "form-control is-valid"
@@ -48,7 +49,9 @@ const Size = ({setValid, setNum, valid}) => {
             <Form.Control placeholder='Enter Number of Team Members' />  
         </Form.Group>           
         <Button  onClick = {handleClick} variant="primary" href='/build' className = "col-2">Continue</Button> 
-        <div className="text-danger invisible" id="ErrorMessage">Please, insert a postive number.</div>        
+        <div className="text-danger invisible" id="ErrorMessage">
+        <Alert variant={"danger"}>Please, insert a positive, integer value. </Alert>
+        </div>        
     </Form>
      );
 }

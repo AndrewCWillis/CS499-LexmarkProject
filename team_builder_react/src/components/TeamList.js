@@ -38,7 +38,7 @@ const TeamList = (props) =>{
                             size = "sm"
                             onClick = {removeHandler}
                             style = {props.type === "info" ? remove : assign}>
-                                'X'
+                                X
                             </Button>
                         </ButtonGroup>
                         )
