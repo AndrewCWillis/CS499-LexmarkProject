@@ -1,5 +1,6 @@
 import json
 from random import randint, random
+from numpy import random as npRand
 
 def getNames(howMany:int) -> list[dict]:
     boyNames = []
@@ -42,16 +43,26 @@ def getNames(howMany:int) -> list[dict]:
         # ----------------------------------
 
         # ------------- Traits -------------
-        bpt_confidence = round(random(),2)
-        bpt_delegator = round(random(),2)
-        bpt_determination = round(random(),2)
-        bpt_disruptor = round(random(),2)
-        bpt_independence = round(random(),2)
-        bpt_knowledge = round(random(),2)
-        bpt_profitability = round(random(),2)
-        bpt_relationship = round(random(),2)
-        bpt_risk = round(random(),2)
-        bpt_selling = round(random(),2)
+        Confidence = .42
+        Delegator = .50
+        Determination = .56
+        Disruptor = .49
+        Independence = .50
+        Knowledge = .53
+        Profitability = .36
+        Relationship = .44
+        Risk = .48
+        Selling = .40
+        bpt_confidence = round(npRand.normal(Confidence, 1-Confidence),2)
+        bpt_delegator = round(npRand.normal(Delegator, 1-Delegator),2)
+        bpt_determination = round(npRand.normal(Determination, 1-Determination),2)
+        bpt_disruptor = round(npRand.normal(Disruptor, 1-Disruptor),2)
+        bpt_independence = round(npRand.normal(Independence, 1-Independence),2)
+        bpt_knowledge = round(npRand.normal(Knowledge, 1-Knowledge),2)
+        bpt_profitability = round(npRand.normal(Profitability, 1-Profitability),2)
+        bpt_relationship = round(npRand.normal(Relationship, 1-Relationship),2)
+        bpt_risk = round(npRand.normal(Risk, 1-Risk),2)
+        bpt_selling = round(npRand.normal(Selling, 1-Selling),2)
         # ----------------------------------
 
         returnNames.append({
@@ -72,13 +83,14 @@ def getNames(howMany:int) -> list[dict]:
     
     return returnNames
 
-data = getNames(250)
+print(getNames(1))
+# data = getNames(250)
 
-import requests
+# import requests
 
-for person in data:
-    response = requests.post('http://127.0.0.1:8000/employees/', json=person)
-    if response.status_code != 200:
-        print("Status code: ", response.status_code)
-        print("Printing Entire Post Request")
-        print(response.json())
+# for person in data:
+#     response = requests.post('http://127.0.0.1:8000/employees/', json=person)
+#     if response.status_code != 200:
+#         print("Status code: ", response.status_code)
+#         print("Printing Entire Post Request")
+#         print(response.json())

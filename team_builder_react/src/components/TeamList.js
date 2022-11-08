@@ -4,25 +4,12 @@ import Stack from 'react-bootstrap/Stack';
 import Alert from 'react-bootstrap/Alert';
 
 const TeamList = (props) =>{
-
+    //-------------------------------------------------------------------------------------------------------
+    //DISPLAYS AS A LIST OF REMOVABLE BUTTONS
+    //-------------------------------------------------------------------------------------------------------
     function removeHandler(event){
         event.target.parentElement.remove()
     }
-    function addHandler(event){
-        var name = event.target.parentElement.id
-        //robert is hard coded now, but will be whatever member was last clicked
-        var replacedName = document.getElementById('Robert').querySelector('.memberName').textContent
-        console.log(`Tried replace a team member with ${name}.`)
-        //will become more complicated later, but just starting off: 
-        document.getElementById('Robert').querySelector('.memberName').textContent = name
-        document.getElementById('Robert').querySelector('.memberName').id = name
-
-        //then, the replaced member moves to the supplemental list:
-        console.log(`${replacedName}`)
-        event.target.parentElement.id = replacedName
-        event.target.parentElement.querySelector('.memberName').textContent = replacedName
-    }
-
     console.log(`Props: ${props.names}`)
     var TeamList = props.names
     console.log(props.type)
@@ -37,7 +24,7 @@ const TeamList = (props) =>{
         fontWeight: 'bold'
     };
 
-    if (TeamList.length > 0){
+    if (TeamList.length > 0){//verify that array of member names was supplied
         return (  
             <>
             <Stack direction='vertical' gap={2} className="col-md-5 mx-auto my-auto h-100">
@@ -49,9 +36,9 @@ const TeamList = (props) =>{
                             <Button variant={props.type} size = "lg" className = 'memberName'>{name}</Button>
                             <Button variant={props.type}
                             size = "sm"
-                            onClick = {props.type === "info" ? removeHandler : addHandler}
+                            onClick = {removeHandler}
                             style = {props.type === "info" ? remove : assign}>
-                                {props.type === "info" ? 'X' : '+'}
+                                'X'
                             </Button>
                         </ButtonGroup>
                         )

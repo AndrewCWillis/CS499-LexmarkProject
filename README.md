@@ -6,8 +6,6 @@ React Frontend: `team_builder_react`
 
 Django Backend: `team_builder_django`
 
-~~Python Virtual Environment: `py_venv`~~ TODO: .gitignore this file. Users will create their own venv.
-
 # Starting Django
 Before the Django server is started, a Python virtual environment must be created using `python -m venv py_venv`. Once created activate the virtual environment using `py_venv\Scripts\activate` (Windows). ~~To exit python virtual environment `deactivate`~~
 
