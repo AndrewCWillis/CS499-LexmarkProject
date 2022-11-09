@@ -1,4 +1,5 @@
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
 import React, {useState} from 'react';
 import CheckList from './CheckList.js';
 import Results from './Results.js';
@@ -39,17 +40,19 @@ const Parameters = () => {
             );
         }else{//Load Technical skills checklist form
             return(
-                <div>
-                    <div>
-                        <div>
-                            Please, Enter the Desired Technical Skills for this Position:
-                        </div>
+                <Card border="dark">
+                    <Card.Header className="font-weight-bold">
+                        <h4>Please, Enter the Desired Technical Skills for this Position:</h4>
+                    </Card.Header>
+                    <Card.Body>
                         {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
-                    </div>  
-                    <div style = {{marginTop: "15px"}}>
-                        <Button  variant="primary" href='/build' onClick = {handleSubmit} className = "col-2">Build</Button>
-                    </div>
-                </div>
+                   
+                        <div style = {{marginTop: "15px"}}>
+                            <Button  variant="primary" href='/build' onClick = {handleSubmit} className = "col-2">Build</Button>
+                        </div>
+                    </Card.Body>
+                </Card>
+
             );
         }
     }else{//Load Team size form

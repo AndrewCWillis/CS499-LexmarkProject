@@ -70,12 +70,14 @@ const Results = ({techList, num}) => {
                       });
                       var scoresAvg = []
                       Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team.length))//compute average for each talent
+                      setNames(temp)
+                      setScores(scoresAvg)
+                      setTeamResponse(true)//notifiy the view that the data has been loaded and consumed
                     }
                     //record extracted data as a state to update the view
                     
-                    setNames(temp)
-                    setScores(scoresAvg)
-                    setTeamResponse(true)//notifiy the view that the data has been loaded and consumed
+                    
+
                 })
             })
             
