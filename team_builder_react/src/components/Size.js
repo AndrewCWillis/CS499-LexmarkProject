@@ -2,6 +2,8 @@ import React, { Component, useState} from 'react';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
+import Card from 'react-bootstrap/Card';
+
 const Size = ({setValid, setNum, valid}) => {
     //-------------------------------------------------------------------------------------------------------
     //FORM TO COLLECT TEAM SIZE PARAMETER
@@ -41,18 +43,20 @@ const Size = ({setValid, setNum, valid}) => {
     //CONSTRUCT THE VIEW
     //-------------------------------------------------------------------------------------------------------
     return ( 
-        <Form className="mx-auto my-auto h-100">
-        <Form.Group className='mb-3' controlId='teamSize' onChange = {handleChange}>
-            <Form.Label>
-                Please, Enter the Number of Employees For Your Team:
-            </Form.Label> 
-            <Form.Control placeholder='Enter Number of Team Members' />  
-        </Form.Group>           
-        <Button  onClick = {handleClick} variant="primary" href='/build' className = "col-2">Continue</Button> 
-        <div className="text-danger invisible" id="ErrorMessage">
-        <Alert variant={"danger"}>Please, insert a positive, integer value. </Alert>
-        </div>        
-    </Form>
+        <Card border="dark">
+            <Card.Header ><h4>Please, Enter the Number of Employees For Your Team:</h4></Card.Header>
+            <Card.Body>
+                <Form className="mx-auto my-auto h-100">
+                <Form.Group className='mb-3' controlId='teamSize' onChange = {handleChange}>
+                    <Form.Control placeholder='Enter Number of Team Members' />  
+                </Form.Group>           
+                <Button  onClick = {handleClick} variant="primary" href='/build' className = "col-2">Continue</Button> 
+                <div className="text-danger invisible" id="ErrorMessage">
+                <Alert variant={"danger"}>Please, insert a positive, integer value. </Alert>
+                </div>        
+                </Form>
+            </Card.Body>
+        </Card>
      );
 }
  
