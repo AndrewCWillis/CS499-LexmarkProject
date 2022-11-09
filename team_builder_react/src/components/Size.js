@@ -3,7 +3,6 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-
 const Size = ({setValid, setNum, valid}) => {
     //-------------------------------------------------------------------------------------------------------
     //FORM TO COLLECT TEAM SIZE PARAMETER
@@ -57,6 +56,7 @@ const Size = ({setValid, setNum, valid}) => {
                 </Form>
             </Card.Body>
         </Card>
+
      );
 }
  

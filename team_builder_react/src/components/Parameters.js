@@ -30,7 +30,7 @@ const Parameters = () => {
     const GetInputFromCheckList = (skills) => {
         techList = skills;
     }
-    //-------------------------------------------------------------------------------------------------
+    //-------------------------------------------------------------------------------------------------------
     //CONSTRUCT THE VIEW 
     //-------------------------------------------------------------------------------------------------------
     if ((valid) && (num !== 0)){//Team size has been provided (not initial 0), and is valid
@@ -52,6 +52,7 @@ const Parameters = () => {
                         </div>
                     </Card.Body>
                 </Card>
+
             );
         }
     }else{//Load Team size form
