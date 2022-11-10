@@ -1,10 +1,14 @@
 import InputPerson from "../components/InputPerson";
+import Header from "../components/Header.js";
 
 const Input = () => {
     return (
-        <div className="col-md-5 mx-auto my-auto h-100">
-            <InputPerson />
-        </div>
+        <>
+            <Header />
+            <div className="col-md-5 mx-auto my-auto h-100">
+                <InputPerson />
+            </div>
+        </>
     ) 
 }
 

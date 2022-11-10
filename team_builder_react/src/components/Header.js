@@ -3,7 +3,9 @@ import help from '../data/help.json';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-const FAQ = () => {
+import NavDropdown from 'react-bootstrap/NavDropdown';
+
+const Header = () => {
     const [show, setShow] = useState(false);
     const [displayedTitle, setTitle] = useState(false);
     const [displayedBody, setBody] = useState(false);
@@ -37,13 +39,18 @@ const FAQ = () => {
 
     return ( 
         <>
-        <Navbar bg="primary" variant="dark" expand="lg" fixed="bottom">
+        <Navbar bg="primary" variant="dark" expand="lg" fixed="top" >
             <Nav>
-                <Navbar.Brand >Frequently Asked Questions</Navbar.Brand>
-                <Nav.Link onClick={handleShow} id="BP10">What is BP10?</Nav.Link>
-                <Nav.Link onClick={handleShow} id="Starting">How do I get started?</Nav.Link>
-                <Nav.Link onClick={handleShow} id="Purpose">Our Purpose</Nav.Link>
-                <Nav.Link href="Template.xlsx" id="Format" download>Download Data Format</Nav.Link>
+                <Navbar.Brand href="/" >Team Builder Application</Navbar.Brand>
+                <Nav.Link href="/input" id="Input">Input</Nav.Link>
+                <Nav.Link href="/build" id="Build">Build</Nav.Link>
+                <NavDropdown title="Frequently Asked Questions" id="basic-nav-dropdown" >
+
+                    <NavDropdown.Item onClick={handleShow} id="BP10">What is BP10?</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleShow} id="Starting">How do I get started?</NavDropdown.Item>
+                    <NavDropdown.Item onClick={handleShow} id="Purpose">Our Purpose</NavDropdown.Item>
+                    <NavDropdown.Item href="Template.xlsx" id="Format" download>Download Data Format</NavDropdown.Item>
+                </NavDropdown>
             </Nav>
         </Navbar>
 
@@ -60,4 +67,4 @@ const FAQ = () => {
      );
 }
  
-export default FAQ;
+export default Header;

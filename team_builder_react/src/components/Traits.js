@@ -3,6 +3,7 @@ import axios from "axios";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
+import Card from 'react-bootstrap/Card';
 
 import { SendPersonToBackEnd } from '../utilities/API_Interface';
 import CSVReader from 'react-csv-reader'; // https://www.npmjs.com/package/react-csv-reader
@@ -170,23 +171,29 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndRespo
     }
 
     return (
-        <Form className="mx-auto my-auto h-100">
-            <Form.Group className='mb-3' controlId='formBP10File' >
-                <Form.Label>Upload Your BP10 Report as a CSV File</Form.Label>
-                <CSVReader 
-                    onFileLoaded={HandleFileUpload}
-                    onError={HandleUploadError}
-                    cssClass='custom-file-input'
-                    cssInputClass='form-control'
-                    parserOptions={papaparseOptions}
-                    strict={true} />
-            </Form.Group>
-            <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
-                <Button onClick={HandleBack}>Back</Button>
-                <Button onClick={HandleTraitsSubmit} id="TraitsSubmit">Submit</Button>
-            </Stack>
-            <div className="text-danger invisible" id="TraitsErrorMessage">Please upload a valid csv.</div>
-        </Form>
+        <Card border="dark">
+            <Card.Header className="font-weight-bold">
+                <h4>Please, Upload Your BP10 Report as a CSV File:</h4>
+            </Card.Header>
+            <Card.Body>
+                <Form className="mx-auto my-auto h-100">
+                    <Form.Group className='mb-3' controlId='formBP10File' >
+                        <CSVReader 
+                            onFileLoaded={HandleFileUpload}
+                            onError={HandleUploadError}
+                            cssClass='custom-file-input'
+                            cssInputClass='form-control'
+                            parserOptions={papaparseOptions}
+                            strict={true} />
+                    </Form.Group>
+                    <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                        <Button onClick={HandleBack}>Back</Button>
+                        <Button onClick={HandleTraitsSubmit} id="TraitsSubmit">Submit</Button>
+                    </Stack>
+                    <div className="text-danger invisible" id="TraitsErrorMessage">Please upload a valid csv.</div>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
 

@@ -48,7 +48,7 @@ const Parameters = () => {
                         {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
                    
                         <div style = {{marginTop: "15px"}}>
-                            <Button  variant="primary" href='/build' onClick = {handleSubmit} className = "col-2">Build</Button>
+                            <Button variant="primary" href='/build' onClick = {handleSubmit}>Build</Button>
                         </div>
                     </Card.Body>
                 </Card>
