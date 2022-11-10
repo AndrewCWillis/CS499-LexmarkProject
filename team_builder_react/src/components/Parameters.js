@@ -1,5 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import Alert from 'react-bootstrap/Alert';
 import React, {useState} from 'react';
 import CheckList from './CheckList.js';
 import Results from './Results.js';
@@ -14,11 +15,15 @@ const Parameters = () => {
     const [submit, setSubmit] = useState(false);//Submit the technical skills parameter
     const [num, setNum] = useState(0); //Team size provided from Size component
     var techList = []; // Look at skills for an example as to how to use this var 
-   
 
     const handleSubmit = (event) =>{//has finished selecting all the parameters for team construction
         event.preventDefault()
-        setSubmit(true)
+        if (techList.length > 0){//enforce that at least one skill was provided
+            setSubmit(true)
+        }
+        else{
+            document.getElementById("ErrorMessage").className = "text-danger visible"
+        }
     }
 
     /*
@@ -30,6 +35,7 @@ const Parameters = () => {
     const GetInputFromCheckList = (skills) => {
         techList = skills;
     }
+    
     //-------------------------------------------------------------------------------------------------------
     //CONSTRUCT THE VIEW 
     //-------------------------------------------------------------------------------------------------------
@@ -48,8 +54,11 @@ const Parameters = () => {
                         {<CheckList SendToParent={GetInputFromCheckList} defaultSelected={[]} />}
                    
                         <div style = {{marginTop: "15px"}}>
-                            <Button  variant="primary" href='/build' onClick = {handleSubmit} className = "col-2">Build</Button>
+                            <Button  variant="primary" href='/build' id = "build" onClick = {handleSubmit} className = "col-2">Build</Button>
                         </div>
+                        <div className="text-danger invisible" id="ErrorMessage">
+                            <Alert variant={"danger"}>Please, select at least one technical skill.</Alert>
+                        </div>  
                     </Card.Body>
                 </Card>
 
