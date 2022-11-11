@@ -80,7 +80,10 @@ class RequestedTeams(APIView):
             # Using the RequestedTeams' parameters, get a list of EmployeeIds that make a valid team
             validTeam = createValidTeams(RequestedTeam.objects.latest("id").teamSize, RequestedTeam.objects.latest("id").skills)
 
-            print(validTeam)
+            # print(validTeam) # DEBUG
+
+            # Determine the success of the algorithm for FE display logic
+            returnBool = RequestedTeam.objects.latest("id").teamSize == len(validTeam)
 
             # Create a SentTeam object
             SentTeam.objects.create(
@@ -90,7 +93,8 @@ class RequestedTeams(APIView):
 
             # Respond to POST with 200_OK and the Id of the created team
             return Response(
-                data = {"id": SentTeam.objects.latest("id").id},     
+                data = {"id": SentTeam.objects.latest("id").id,
+                        "completeTeam": returnBool},     
                 status = httpStatus.HTTP_200_OK
                 )
         else:
