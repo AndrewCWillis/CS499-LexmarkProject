@@ -11,73 +11,69 @@ import axios from "axios";
 import { GetEmployeeList, GetValidTeam, SendTeamParameters } from '../utilities/API_Interface.js';
 
 const Results = ({techList, num}) => {
-    const labels = ['Confidence', 'Delegator', 'Determination', 'Selling', 'Relationship', 'Disrupter', 'Knowledge', 'Independance', 'Profitability', 'Risk'];//Graph labels
+    const labels = ["Confidence", "Delegator","Determination","Selling","Relationship","Disruptor","Knowledge","Independence","Profitability","Risk"];//Graph labels
     //VV capture the status and data from interface with API
     const [names, setNames] = useState([])
     const [scores, setScores] = useState([])
     const [teamResponse, setTeamResponse] = useState(false)
-    const [team, setTeam] = useState(false)
+    const [teamLength, setTeamLength] = useState(0)
     const [firstTime, setFirstTime] = useState(false)
 
     loadData();
     //-------------------------------------------------------------------------------------------------------
     //PULL DATA IN FROM REMOTE 
     //-------------------------------------------------------------------------------------------------------
+    function handleData(team){//process the data response and update states
+      var temp = []//will contain the strings "name_last, name_first"
+      var team_Length = 0 //some of the entries in the response array might be errors, have to tally the actual team size
+      var scoresTemp = 
+      {"bpt_confidence":0, 
+      "bpt_delegator":0,
+      "bpt_determination":0,
+      "bpt_selling":0,
+      "bpt_relationship":0,
+      "bpt_disruptor":0,
+      "bpt_knowledge":0,
+      "bpt_independence":0,
+      "bpt_profitability":0,
+      "bpt_risk":0}//same keys as the response member object
+
+      team.forEach((member, index) => {
+        //vv extract "last name, first name"
+        if (! axios.isAxiosError(member)){//make sure the entry is not an error
+          temp.push(`${member.name_last}, ${member.name_first}`);
+          team_Length += 1
+          //vv accumulate scores  from each member to display the average in each talent cat.
+          Object.keys(scoresTemp).forEach((key)=>{ //iterate over keys to extract values from response member
+              scoresTemp[key] += member[key]
+          });
+        }else{
+          temp.push(`ERROR ${index} fetching an employee's data!`) //push the error to the list to display later
+        }
+      });
+      var scoresAvg = []
+      //SAVE THE RESULTS AS STATES TO UPDATE THE VIEW
+      //          VVVV
+      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team_Length))//compute average for each talent
+      setTeamLength(team_Length)
+      setNames(temp)
+      setScores(scoresAvg)
+      setTeamResponse(true)//no
+    }
+
     function loadData(){
 
       if (!firstTime ){//prevent multiple transmissions
         setFirstTime(true)
-        
+  
         SendTeamParameters(num, techList)
         .then((id) => {
-            console.log("Response ID: " + id);
-
             GetValidTeam(id)
             .then((response) => {
-                console.log("Team Response: " + response);
-
                 // GetEmployeeList(response.data)
                 GetEmployeeList([1, 2, 3])
                 .then((team) => {
-                    console.log("Response for getting employees:");
-                    console.log(team[1]);
-                    setTeam(team);
-                    if (team.length > 0){ //guard against division by 0 for average
-
-                      var temp = []//will contain the strings "name_last, name_first"
-                      var scoresTemp = 
-                      {"bpt_confidence":0, 
-                      "bpt_delegator":0,
-                      "bpt_determination":0,
-                      "bpt_selling":0,
-                      "bpt_relationship":0,
-                      "bpt_disruptor":0,
-                      "bpt_knowledge":0,
-                      "bpt_independence":0,
-                      "bpt_profitability":0,
-                      "bpt_risk":0}//same keys as the response member object
-
-                      team.forEach((member) => {
-                        //vv extract "last name, first name"
-                        if (! axios.isAxiosError(member)){//make sure the entry is not an error
-                          temp.push(`${member.name_last}, ${member.name_first}`);
-                          
-                          //vv accumulate scores  from each member to display the avergae in each talent cat.
-                          Object.keys(scoresTemp).forEach((key)=>{ //iterate over keys to extract values from response member
-                              scoresTemp[key] += member[key]
-                          });
-                        }
-                      });
-                      var scoresAvg = []
-                      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team.length))//compute average for each talent
-                      setNames(temp)
-                      setScores(scoresAvg)
-                      setTeamResponse(true)//notifiy the view that the data has been loaded and consumed
-                    }
-                    //record extracted data as a state to update the view
-                    
-                    
-
+                    team.length > 0 && handleData(team); //guard agaisnt division by zero 
                 })
             })
             
@@ -87,10 +83,11 @@ const Results = ({techList, num}) => {
     }
 
   }
+
+
     //-------------------------------------------------------------------------------------------------------
-    //CONSTRUCT THE VIEW
+    // BUILD THE GRAPHS
     //-------------------------------------------------------------------------------------------------------
-    //THE GRAPH:
     const options = {
         responsive: true,
         plugins: {
@@ -109,7 +106,18 @@ const Results = ({techList, num}) => {
         datasets: [
           {
             label: 'Team Talent Composite Score',
-            data: scores.length > 0 ? scores : [0,0,0,0,0,0,0,0,0,0],
+            data: scores.length > 0 ? scores : [0,0,0,0,0,0,0,0,0,0], //check if there was data response, if not display all zeroes
+            backgroundColor: 'rgba(255, 99, 132, 0.5)',
+          },
+        ],
+      };
+
+      const popAvg = { //Hard coded data, wont change. The population average in each category
+        labels,
+        datasets: [
+          {
+            label: 'Population Average Scores',
+            data: [42,50,56,40,44,49,53,50,36,48],
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
@@ -120,31 +128,66 @@ const Results = ({techList, num}) => {
         height: "200px"
       };
 
-    const alert = <Alert variant={"danger"}>Error loading the data! </Alert>
-                    
+    const alert = <Alert variant={"danger"}>Error loading the data! </Alert> // Displayed when backend server is not running
+    const incompleteTeam = <Alert variant={"warning"}>Team generation was over-constrained. As a result, the generated team is smaller than requested.</Alert>
+
+    //-------------------------------------------------------------------------------------------------------
+    //CONSTRUCT THE VIEW
+    //------------------------------------------------------------------------------------------------------- 
+    const spacer = { //spacer to add some leg room to the layour
+      paddingTop: "100px"
+    }; 
+    const navbarSpace = {
+      paddingTop: "25px"
+    }
+    const spacerDiv = <div style = {spacer}></div>              
     return (  
         <>
-        <Navbar bg="dark"  variant="dark">
+
+        {spacerDiv}
+
+        <Navbar bg="dark"  variant="dark" >
           <Container>
-            <Navbar.Brand>Composite Scores:</Navbar.Brand>
+            <Navbar.Brand>Population Average BP10:</Navbar.Brand>
           </Container>
         </Navbar>
 
-        <Bar options={options} data={data} />
+        <Bar options={options} data={popAvg} style = {navbarSpace}/>
+        
+        {spacerDiv}
 
-        <Navbar bg="dark"  variant="dark">
+        <Navbar bg="dark"  variant="dark" >
           <Container>
-            <Navbar.Brand>Results of Team Generation:</Navbar.Brand>
+            <Navbar.Brand>Composite Scores for Generate Team:</Navbar.Brand>
           </Container>
         </Navbar>
 
-        <Container>
+        <Bar options={options} data={data} style = {navbarSpace}/>
+
+        {spacerDiv}
+
+        <Navbar bg="dark"  variant="dark">
+          <Container>
+            <Navbar.Brand>Members of Generated Team:</Navbar.Brand>
+          </Container>
+        </Navbar>
+
+        <Container style = {navbarSpace}>
           <Row>
             <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
-              {teamResponse ? <TeamList type = "info" names = {names}/> : alert}
+              {teamResponse ? <TeamList names = {names}/> : alert}
             </Stack>
           </Row>
         </Container>
+
+        {spacerDiv}
+
+        <div>
+          {(teamLength < num) ? incompleteTeam : <div></div>}
+        </div>
+
+        {spacerDiv}
+
         </>
     );
 }

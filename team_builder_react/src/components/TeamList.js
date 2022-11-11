@@ -31,13 +31,14 @@ const TeamList = (props) =>{
             {
                 TeamList.map(
                     function (name) {
+                        var isError = name.startsWith("ERROR")
                         return(
                         <ButtonGroup aria-label="Basic example" key={name} id = {name}>
-                            <Button variant={props.type} size = "lg" className = 'memberName'>{name}</Button>
-                            <Button variant={props.type}
+                            <Button variant={isError ? "danger" : "info"} size = "lg" className = 'memberName'>{name}</Button>
+                            <Button variant={isError ? "danger" : "info"}
                             size = "sm"
                             onClick = {removeHandler}
-                            style = {props.type === "info" ? remove : assign}>
+                            style = {remove}>
                                 X
                             </Button>
                         </ButtonGroup>
