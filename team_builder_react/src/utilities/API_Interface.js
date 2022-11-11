@@ -173,7 +173,6 @@ export const GetValidTeam = async (teamID) => {
              if there was an error in the request, then the Axios error in a Promise.
 */
 const GetEmployee = async (employeeID) => {
-    // TODO: Test this when the back-end can be queried with values
     try {
         const response = await axiosInstance.get('/employees/?id=' + employeeID.toString());
         return response.data;
@@ -193,7 +192,7 @@ const GetEmployee = async (employeeID) => {
 
     returns: if no server errors, a Promise that a list of objects where each 
                 element is an employee's information.
-            [[{
+            [{
                 "id": int,
                 "name_last": string,
                 "name_first": string,
@@ -208,7 +207,7 @@ const GetEmployee = async (employeeID) => {
                 "bpt_relationship": int,
                 "bpt_risk": int,
                 "bpt_selling": int
-            }, ...], ...]
+            }, ...]
              if there was an error in the request, then the Axios error in a Promise
              in a single element list.
 */
