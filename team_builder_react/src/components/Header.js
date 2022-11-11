@@ -45,7 +45,6 @@ const Header = () => {
                 <Nav.Link href="/input" id="Input">Input</Nav.Link>
                 <Nav.Link href="/build" id="Build">Build</Nav.Link>
                 <NavDropdown title="Frequently Asked Questions" id="basic-nav-dropdown" >
-
                     <NavDropdown.Item onClick={handleShow} id="BP10">What is BP10?</NavDropdown.Item>
                     <NavDropdown.Item onClick={handleShow} id="Starting">How do I get started?</NavDropdown.Item>
                     <NavDropdown.Item onClick={handleShow} id="Purpose">Our Purpose</NavDropdown.Item>
