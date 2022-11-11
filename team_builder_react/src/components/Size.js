@@ -48,7 +48,7 @@ const Size = ({setValid, setNum, valid}) => {
                 <Form.Group className='mb-3' controlId='teamSize' onChange = {handleChange}>
                     <Form.Control placeholder='Enter Number of Team Members' />  
                 </Form.Group>           
-                <Button  onClick = {handleClick} variant="primary" id = "submit" className = "col-2" disabled ={!valid}>Continue</Button> 
+                <Button  onClick = {handleClick} variant="primary" id = "submit" disabled ={!valid}>Continue</Button> 
                 <div className="text-danger invisible" id="ErrorMessage">
                 <Alert variant={"danger"}>Please, insert a positive, integer value. </Alert>
                 </div>        

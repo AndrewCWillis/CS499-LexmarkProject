@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
+import Card from 'react-bootstrap/Card';
 
 /*
     Component to get the name of the user. It shows two text inputs to the user,
@@ -59,21 +60,28 @@ const Name = ( { defaultFirstName, defaultLastName, setIsOnName, setIsOnSkills, 
 
     // https://react-bootstrap.github.io/forms/overview/#overview
     return (
-        <Form className="mx-auto my-auto h-100">
-            <Form.Group className='mb-3' controlId='formFirstName' >
-                <Form.Label>First Name</Form.Label>
-                <Form.Control defaultValue={defaultFirstName} placeholder='First Name' />
-            </Form.Group>
-            <Form.Group className='mb-3' controlId='formLastName' >
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control defaultValue={defaultLastName} placeholder='Last Name' />
-            </Form.Group>
-            <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
-                <Button disabled={true}>Back</Button>
-                <Button onClick={HandleNameInput}>Continue</Button>
-            </Stack>
-            <div className="text-danger invisible" id="ErrorMessage">Please, input letters in the above boxes.</div>
-        </Form>
+        <Card border="dark">
+            <Card.Header className="font-weight-bold">
+                <h4>Please, Enter Your Name Exactly as it Appears in Your BP10 Results CSV:</h4>
+            </Card.Header>
+            <Card.Body>
+                <Form className="mx-auto my-auto h-80">
+                    <Form.Group className='mb-3' controlId='formFirstName' >
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control defaultValue={defaultFirstName} placeholder='First Name' />
+                    </Form.Group>
+                    <Form.Group className='mb-3' controlId='formLastName' >
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control defaultValue={defaultLastName} placeholder='Last Name' />
+                    </Form.Group>
+                    <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                        <Button disabled={true}>Back</Button>
+                        <Button onClick={HandleNameInput}>Continue</Button>
+                    </Stack>
+                    <div className="text-danger invisible" id="ErrorMessage">Please, input letters in the above boxes.</div>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
 
