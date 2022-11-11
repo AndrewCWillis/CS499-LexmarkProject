@@ -208,8 +208,7 @@ const GetEmployee = async (employeeID) => {
                 "bpt_risk": int,
                 "bpt_selling": int
             }, ...]
-             if there was an error in the request, then the Axios error in a Promise
-             in a single element list.
+             if there was an error in the request, then the Axios error object in a Promise
 */
 export const GetEmployeeList = async (employeeIDList) => {
     var listOfEmployees = [];
