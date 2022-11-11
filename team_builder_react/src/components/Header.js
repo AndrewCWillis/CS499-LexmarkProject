@@ -39,7 +39,7 @@ const Header = () => {
 
     return ( 
         <>
-        <Navbar bg="primary" variant="dark" expand="lg" fixed="top" >
+        <Navbar bg="primary" variant="dark" fixed="top" >
             <Nav>
                 <Navbar.Brand href="/" >Team Builder Application</Navbar.Brand>
                 <Nav.Link href="/input" id="Input">Input</Nav.Link>
