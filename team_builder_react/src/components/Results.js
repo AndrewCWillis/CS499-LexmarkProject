@@ -65,12 +65,12 @@ const Results = ({techList, num}) => {
 
       if (!firstTime ){//prevent multiple transmissions
         setFirstTime(true)
-  
+        
         SendTeamParameters(num, techList)
-        .then((id) => {
-            GetValidTeam(id)
-            .then((response) => {
-                // GetEmployeeList(response.data)
+        .then((response) => {
+            GetValidTeam(response.data.id)
+            .then((teamResponse) => {
+                // GetEmployeeList(teamResponse.data.team)
                 GetEmployeeList([1, 2, 3])
                 .then((team) => {
                     team.length > 0 && handleData(team); //guard agaisnt division by zero 

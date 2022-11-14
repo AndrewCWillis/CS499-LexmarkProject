@@ -32,7 +32,7 @@ const Size = ({setValid, setNum, valid}) => {
     const handleClick = (event) =>{
         //SUBMIT BUTTON PRESSED
         event.preventDefault()
-        var amt = document.getElementById("teamSize").value
+        var amt = Number(document.getElementById("teamSize").value)
         if(valid){
             setNum(amt)//notify Parameters component
         }

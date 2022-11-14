@@ -14,12 +14,15 @@ const Parameters = () => {
     const [valid, setValid] = useState(false); //Valid input provided in Size component
     const [submit, setSubmit] = useState(false);//Submit the technical skills parameter
     const [num, setNum] = useState(0); //Team size provided from Size component
+
+    const [techSkills, setTechSkills] = useState("");
     var techList = []; // Look at skills for an example as to how to use this var 
 
     const handleSubmit = (event) =>{//has finished selecting all the parameters for team construction
         event.preventDefault()
         if (techList.length > 0){//enforce that at least one skill was provided
             setSubmit(true)
+            setTechSkills(techList);
         }
         else{
             document.getElementById("ErrorMessage").className = "text-danger visible"
@@ -42,7 +45,7 @@ const Parameters = () => {
     if ((valid) && (num !== 0)){//Team size has been provided (not initial 0), and is valid
         if (submit){//Technical Skills parameter has been provided
             return(
-                <Results num = {num} techList = {techList}/>//Results component will  interface with back end to fetch a team
+                <Results num = {num} techList = {techSkills}/>//Results component will  interface with back end to fetch a team
             );
         }else{//Load Technical skills checklist form
             return(

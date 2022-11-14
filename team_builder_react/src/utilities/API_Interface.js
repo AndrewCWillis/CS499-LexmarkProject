@@ -19,13 +19,13 @@ const axiosInstance = axios.create({
 const CheckListArrayToString = (listOfSkills) => {
     var skillsString = "";
 
-    listOfSkills.forEach(skill => {
+    for (const skill of listOfSkills) {
         if (skillsString.length === 0){
             skillsString = skill.name;
         } else {
             skillsString = skillsString + "," + skill.name;
         }
-    });
+    };
 
     return skillsString;
 }
@@ -63,6 +63,9 @@ const CheckListArrayToString = (listOfSkills) => {
         "bpt_risk": 0.9,
         "bpt_selling": 1.0
     }
+
+    response.data format should be the same as what was sent to the back-end, but
+    including the id assigned to that record.
 */
 export const SendPersonToBackEnd = async (person) => {
     var objectToSend = {
@@ -100,13 +103,19 @@ export const SendPersonToBackEnd = async (person) => {
                     (as given by the CheckList component) and represents a
                     technical skill that the build team should posses, if possible.
 
-    returns: if no server errors, a Promise that is the id of the newly created team
-             if there was an error in the request, -1 as a Promise and the error is printed to the console.
+    returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
+             if there was an error in the request, then the Axios error in a Promise.
 
     What will actually be sent to the back-end:
     {
         "teamSize": int
         "skills": comma separated string of skills
+    }
+
+    response.data format:
+    { 
+        "id": <newly created ID for sent_team>,
+        "completeTeam": <bool>
     }
 */
 export const SendTeamParameters = async (teamSizeParam, techSkills) => {
@@ -117,9 +126,9 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
 
     try {
         const response = await axiosInstance.post('/requested_teams/', objectToSend);
-        return response.data.id;
+        return response
     } catch (error) {
-        return -1;
+        return error;
     }
 }
 
@@ -134,6 +143,17 @@ export const SendTeamParameters = async (teamSizeParam, techSkills) => {
 
     returns: if no server errors, a Promise that is the response from the server (https://axios-http.com/docs/res_schema).
              if there was an error in the request, then the Axios error in a Promise.
+
+    response.data format:
+     {
+        "team": [
+            293,
+            327,
+            172,
+            264,
+            153
+        ]
+    }
 */
 export const GetValidTeam = async (teamID) => {
     try {
@@ -208,7 +228,7 @@ const GetEmployee = async (employeeID) => {
                 "bpt_risk": int,
                 "bpt_selling": int
             }, ...]
-             if there was an error in the request, then the Axios error object in a Promise
+            if there was an error in the request, then the Axios error object in a Promise
 */
 export const GetEmployeeList = async (employeeIDList) => {
     var listOfEmployees = [];

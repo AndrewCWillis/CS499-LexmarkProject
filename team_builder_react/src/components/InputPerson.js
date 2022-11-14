@@ -5,7 +5,7 @@ import Traits from "./Traits.js";
 import { useState } from 'react';
 
 /*
-    Component to the name, techincal skills, and BP10 traits of an employee
+    Component to the name, technical skills, and BP10 traits of an employee
         and send the info to the back-end.
     */
 const InputPerson = () => {
@@ -43,7 +43,7 @@ const InputPerson = () => {
                         person={person} 
                         setPerson={setPerson} />);
     } else if (isOnFile) {
-        console.log(person);
+        // console.log(person);
         return (<Traits setIsOnSkills={setIsOnSkills} 
                         setIsOnFile={setIsOnFile} 
                         person={person} 
@@ -51,7 +51,7 @@ const InputPerson = () => {
                         setBackEndResponse={setBackEndResponse}
                         setThankForSubmit={setThankForSubmit} />);
     } else {
-        console.log(person);
+        // console.log(person);
         return (
             <div>
                 <h2>
