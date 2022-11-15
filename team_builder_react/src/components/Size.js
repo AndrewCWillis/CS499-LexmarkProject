@@ -3,6 +3,13 @@ import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+/*-------------------------------------------------------------------------------------------------------
+- this is a form to collect the desired size of the team 
+- it is a child of the Parameters component
+- it is provided props which correspond to states of the Parameters component
+- valid is a boolean prop, which is set to true when the input is a integer value > 1
+- setNum is a method to store the validated input from the user as a state in the Parameters component
+-------------------------------------------------------------------------------------------------------*/
 const Size = ({setValid, setNum, valid}) => {
     //-------------------------------------------------------------------------------------------------------
     //FORM TO COLLECT TEAM SIZE PARAMETER
