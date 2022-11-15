@@ -5,7 +5,15 @@ import React, {useState} from 'react';
 import CheckList from './CheckList.js';
 import Results from './Results.js';
 import Size from './Size.js';
-
+/*-------------------------------------------------------------------------------------------------------
+- This is the core of the Build wing of the application
+- it has several states which correspond to boolean values which mark completion 
+- setSubmit is a boolean value which marks when both Size, and TechSkills forms have been completed and validated
+- setSubmit = True will cause the rendering of the Results component
+- setValid marks a valid team size input had been provided
+- num records the validated value for the team size
+- techSkills records the validated value for the tech skills list
+-------------------------------------------------------------------------------------------------------*/
 
 const Parameters = () => {
     //-------------------------------------------------------------------------------------------------------

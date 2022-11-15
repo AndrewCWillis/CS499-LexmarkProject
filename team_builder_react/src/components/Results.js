@@ -1,6 +1,6 @@
 import { Chart as ChartJS } from 'chart.js/auto'
 import { Bar } from "react-chartjs-2";
-import { useState } from 'react';
+import { useState , useEffect } from 'react';
 import TeamList from './TeamList.js';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
@@ -9,12 +9,22 @@ import Row from 'react-bootstrap/Row';
 import Alert from 'react-bootstrap/Alert';
 import axios from "axios";
 import { GetEmployeeList, GetValidTeam, SendTeamParameters } from '../utilities/API_Interface.js';
-
+/*-------------------------------------------------------------------------------------------------------
+- This page will will transmit the data collected in either of the build forms to the back-end API via
+  the API_Interface.js wrapper functions 
+- the data from the forms are provided as the props to this function:  techList , and num
+- This interaction occurs in the loadData() method below, which is called immeadiatly
+- The response data will be injested and formatted for display in a graph element provided by react-chartjs
+- This will occur in the handleData() method
+- The employee names will be extracted and displayed for the user
+- The team list is editable, and members can be removed by selecting the 'X' beside their name
+-------------------------------------------------------------------------------------------------------*/
 const Results = ({techList, num}) => {
     const labels = ["Confidence", "Delegator","Determination","Selling","Relationship","Disruptor","Knowledge","Independence","Profitability","Risk"];//Graph labels
     //VV capture the status and data from interface with API
     const [names, setNames] = useState([])
     const [scores, setScores] = useState([])
+    const [team, setTeam] = useState([])
     const [teamResponse, setTeamResponse] = useState(false)
     const [teamLength, setTeamLength] = useState(0)
     const [firstTime, setFirstTime] = useState(false)
@@ -65,20 +75,24 @@ const Results = ({techList, num}) => {
 
       if (!firstTime ){//prevent multiple transmissions
         setFirstTime(true)
-        
         SendTeamParameters(num, techList)
         .then((response) => {
+          console.log(response)
+          if (! axios.isAxiosError(response)){ // we know that the response is not an error
+
             GetValidTeam(response.data.id)
             .then((teamResponse) => {
                 // GetEmployeeList(teamResponse.data.team)
-                GetEmployeeList([1, 2, 3])
+                GetEmployeeList([1, 2, 4, 20, 40 , 50, 55, 60, 66])
                 .then((team) => {
+                    setTeam(team)
                     team.length > 0 && handleData(team); //guard agaisnt division by zero 
                 })
             })
-            
+
+          } 
       })
-      
+    
 
     }
 
@@ -101,7 +115,7 @@ const Results = ({techList, num}) => {
         },
       };
       
-      const data = {
+      var data = {
         labels,
         datasets: [
           {
@@ -121,11 +135,6 @@ const Results = ({techList, num}) => {
             backgroundColor: 'rgba(255, 99, 132, 0.5)',
           },
         ],
-      };
-
-      const divider = { //should have variable for height base upon team size (team size * 40)
-        borderLeft: "1px solid #000",
-        height: "200px"
       };
 
     const alert = <Alert variant={"danger"}>Error loading the data! </Alert> // Displayed when backend server is not running
@@ -175,7 +184,7 @@ const Results = ({techList, num}) => {
         <Container style = {navbarSpace}>
           <Row>
             <Stack direction='horizontal' gap={5} className="col-md-5 mx-auto my-auto h-100">
-              {teamResponse ? <TeamList names = {names}/> : alert}
+              {teamResponse ? <TeamList names = {names} team = {team} setScores = {setScores} /> : alert}
             </Stack>
           </Row>
         </Container>
