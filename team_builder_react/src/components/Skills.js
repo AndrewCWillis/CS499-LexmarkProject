@@ -1,6 +1,7 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Stack from 'react-bootstrap/Stack';
+import Card from 'react-bootstrap/Card';
 
 import CheckList from '../components/CheckList';
 
@@ -54,19 +55,25 @@ const Skills = ({ defaultSelectedList, setIsOnName, setIsOnSkills, setIsOnFile, 
     }
 
     return (
-        <Form className="mx-auto my-auto h-100">
-            <Form.Group className='mb-3' controlId='formTechSkills' >
-                <Form.Label>Enter Your Technical Skills</Form.Label>
-                <CheckList 
-                    SendToParent={GetInputFromCheckList}
-                    defaultSelected={defaultSelectedList}
-                />
-            </Form.Group>
-            <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
-                <Button disabled={false} onClick={HandleBack}>Back</Button>
-                <Button onClick={HandleSkillsSubmit}>Continue</Button>
-            </Stack>
-        </Form>
+        <Card border="dark">
+            <Card.Header className="font-weight-bold">
+                <h4>Please, Enter Your Technical Skills:</h4>
+            </Card.Header>
+            <Card.Body>
+                <Form className="mx-auto my-auto h-100">
+                    <Form.Group className='mb-3' controlId='formTechSkills' >
+                        <CheckList 
+                            SendToParent={GetInputFromCheckList}
+                            defaultSelected={defaultSelectedList}
+                        />
+                    </Form.Group>
+                    <Stack direction='horizontal' gap={2} className="col-md-5 mx-auto">
+                        <Button disabled={false} onClick={HandleBack}>Back</Button>
+                        <Button onClick={HandleSkillsSubmit}>Continue</Button>
+                    </Stack>
+                </Form>
+            </Card.Body>
+        </Card>
     );
 }
 
