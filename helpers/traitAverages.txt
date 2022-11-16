@@ -1,0 +1,10 @@
+Confidence, 0.42
+Delegator, 0.50
+Determination, 0.56
+Disruptor, 0.49
+Independence, 0.50
+Knowledge, 0.53
+Profitability, 0.36
+Relationship, 0.44
+Risk, 0.48
+Selling, 0.40

@@ -1,6 +1,12 @@
 import json
 from random import randint, random
-from numpy import random as npRand
+from scipy.stats import truncnorm
+
+def computeTrait(traitAverage:float) -> float:
+    lower = 0
+    upper = 1
+
+    return round(truncnorm.rvs((lower-traitAverage),(upper-traitAverage),loc=traitAverage,scale=1,size=1)[0],2)
 
 def getNames(howMany:int) -> list[dict]:
     boyNames = []
@@ -43,31 +49,36 @@ def getNames(howMany:int) -> list[dict]:
         # ----------------------------------
 
         # ------------- Traits -------------
-        Confidence = .42
-        Delegator = .50
-        Determination = .56
-        Disruptor = .49
-        Independence = .50
-        Knowledge = .53
-        Profitability = .36
-        Relationship = .44
-        Risk = .48
-        Selling = .40
-        bpt_confidence = round(npRand.normal(Confidence, 1-Confidence),2)
-        bpt_delegator = round(npRand.normal(Delegator, 1-Delegator),2)
-        bpt_determination = round(npRand.normal(Determination, 1-Determination),2)
-        bpt_disruptor = round(npRand.normal(Disruptor, 1-Disruptor),2)
-        bpt_independence = round(npRand.normal(Independence, 1-Independence),2)
-        bpt_knowledge = round(npRand.normal(Knowledge, 1-Knowledge),2)
-        bpt_profitability = round(npRand.normal(Profitability, 1-Profitability),2)
-        bpt_relationship = round(npRand.normal(Relationship, 1-Relationship),2)
-        bpt_risk = round(npRand.normal(Risk, 1-Risk),2)
-        bpt_selling = round(npRand.normal(Selling, 1-Selling),2)
+        # Confidence = .42
+        # Delegator = .50
+        # Determination = .56
+        # Disruptor = .49
+        # Independence = .50
+        # Knowledge = .53
+        # Profitability = .36
+        # Relationship = .44
+        # Risk = .48
+        # Selling = .40
+        traitAverages = {}
+        with open("traitAverages.txt", "r") as inFile:
+            for line in inFile:
+                splitLine = line.split(",")
+                traitAverages[splitLine[0].strip()] = float(splitLine[1].strip())
+        bpt_confidence = computeTrait(traitAverages["Confidence"])
+        bpt_delegator = computeTrait(traitAverages["Delegator"])
+        bpt_determination = computeTrait(traitAverages["Determination"])
+        bpt_disruptor = computeTrait(traitAverages["Disruptor"])
+        bpt_independence = computeTrait(traitAverages["Independence"])
+        bpt_knowledge = computeTrait(traitAverages["Knowledge"])
+        bpt_profitability = computeTrait(traitAverages["Profitability"])
+        bpt_relationship = computeTrait(traitAverages["Relationship"])
+        bpt_risk = computeTrait(traitAverages["Risk"])
+        bpt_selling = computeTrait(traitAverages["Selling"])
         # ----------------------------------
 
         returnNames.append({
-            "name_first":firstName, 
-            "name_last":lastName, 
+            "name_first":firstName[0].upper() + firstName[1:].lower(), 
+            "name_last":lastName[0].upper() + lastName[1:].lower(), 
             "skills": ",".join(skills),
             "bpt_confidence": bpt_confidence,
             "bpt_delegator": bpt_delegator,
@@ -83,14 +94,13 @@ def getNames(howMany:int) -> list[dict]:
     
     return returnNames
 
-print(getNames(1))
-# data = getNames(250)
+data = getNames(250)
 
-# import requests
+import requests
 
-# for person in data:
-#     response = requests.post('http://127.0.0.1:8000/employees/', json=person)
-#     if response.status_code != 200:
-#         print("Status code: ", response.status_code)
-#         print("Printing Entire Post Request")
-#         print(response.json())
+for person in data:
+    response = requests.post('http://127.0.0.1:8000/employees/', json=person)
+    if response.status_code != 200:
+        print("Status code: ", response.status_code)
+        print("Printing Entire Post Request")
+        print(response.json())
