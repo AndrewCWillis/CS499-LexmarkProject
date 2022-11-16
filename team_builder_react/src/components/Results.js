@@ -82,8 +82,7 @@ const Results = ({techList, num}) => {
 
             GetValidTeam(response.data.id)
             .then((teamResponse) => {
-                // GetEmployeeList(teamResponse.data.team)
-                GetEmployeeList([1, 2, 4, 20, 40 , 50, 55, 60, 66])
+                GetEmployeeList(teamResponse.data.team)
                 .then((team) => {
                     setTeam(team)
                     team.length > 0 && handleData(team); //guard agaisnt division by zero 
