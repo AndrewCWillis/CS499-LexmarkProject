@@ -171,7 +171,10 @@ def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list
     
     
     # Return a list of the ID's of the team members.
-    return [r.id for r in members[0:teamSize]]
+    if len(members) > teamSize:
+        return [r.id for r in members[0:teamSize]]
+    else:
+        return [r.id for r in members]
 
 class Member:
     def __init__(
