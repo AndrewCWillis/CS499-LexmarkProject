@@ -134,23 +134,24 @@ def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list
     members = []
     for skill in skills.split(","):
         for e in Employee.objects.filter(skills__contains=skill.strip()):
-            members.append(Member(
-                e.id,
-                e.name_first, 
-                e.name_last, 
-                e.skills.split(','),
-                e.bpt_confidence,
-                e.bpt_delegator,
-                e.bpt_determination,
-                e.bpt_disruptor,
-                e.bpt_independence,
-                e.bpt_knowledge,
-                e.bpt_profitability,
-                e.bpt_relationship,
-                e.bpt_risk,
-                e.bpt_selling
+            if not any(x.id == e.id for x in members):
+                members.append(Member(
+                    e.id,
+                    e.name_first, 
+                    e.name_last, 
+                    e.skills.split(','),
+                    e.bpt_confidence,
+                    e.bpt_delegator,
+                    e.bpt_determination,
+                    e.bpt_disruptor,
+                    e.bpt_independence,
+                    e.bpt_knowledge,
+                    e.bpt_profitability,
+                    e.bpt_relationship,
+                    e.bpt_risk,
+                    e.bpt_selling
+                    )
                 )
-            )
 
     members.sort(reverse=True)
     
@@ -161,7 +162,7 @@ def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list
     
     # Checking to make sure the team is above threshold value
     
-    # print(possible)
+    #print(possible)
 
 
     # print(f"I was passed teamSize:{teamSize} and skills: {skills}")
