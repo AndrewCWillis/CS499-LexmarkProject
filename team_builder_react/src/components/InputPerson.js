@@ -5,9 +5,9 @@ import Traits from "./Traits.js";
 import { useState } from 'react';
 
 /*
-    Component to the name, technical skills, and BP10 traits of an employee
+    Component to get the name, technical skills, and BP10 traits of an employee
         and send the info to the back-end.
-    */
+*/
 const InputPerson = () => {
     // State to store the person's information
     const [ person, setPerson ] = useState({
