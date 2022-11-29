@@ -49,11 +49,21 @@ class Employees(APIView):
         serializer = EmployeeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        print(request)
+        data = serializer.data
+        data["id"] = Employee.objects.latest("id").id
         return Response(
-            data = serializer.data,
+            data = data,
             status = httpStatus.HTTP_200_OK
         )
+    
+    def delete(self, request):
+        getId = self.request.GET.get('id', request.data["id"])
+        if(getId != None):
+            employee = Employee.objects.get(id=getId)
+            employee.delete()
+            return Response(data={}, status= httpStatus.HTTP_200_OK)
+        else:
+            return Response(data={}, status=httpStatus.HTTP_410_GONE)
 
 class RequestedTeams(APIView):
 
