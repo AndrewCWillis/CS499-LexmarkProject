@@ -49,11 +49,21 @@ class Employees(APIView):
         serializer = EmployeeSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-        print(request)
+        data = serializer.data
+        data["id"] = Employee.objects.latest("id").id
         return Response(
-            data = serializer.data,
+            data = data,
             status = httpStatus.HTTP_200_OK
         )
+    
+    def delete(self, request):
+        getId = self.request.GET.get('id', request.data["id"])
+        if(getId != None):
+            employee = Employee.objects.get(id=getId)
+            employee.delete()
+            return Response(data={}, status= httpStatus.HTTP_200_OK)
+        else:
+            return Response(data={}, status=httpStatus.HTTP_410_GONE)
 
 class RequestedTeams(APIView):
 
@@ -122,7 +132,7 @@ class SentTeams(APIView):
             }
             return Response(detail, status = httpStatus.HTTP_200_OK)
         else:
-            return Response(status = httpStatus.HTTP_200_OK)
+            return Response(status = httpStatus.HTTP_410_GONE)
 
     def post(self, request):
             serializer = SentTeamSerializer(data=request.data)
@@ -130,52 +140,57 @@ class SentTeams(APIView):
                 serializer.save()
             return Response(serializer.data)
 
-def createValidTeams(teamSize: int, skills: str, threshold: float = 0.1) -> list:
+def createValidTeams(teamSize: int, skills: str) -> list:
     members = []
-    for skill in skills.split(","):
-        for e in Employee.objects.filter(skills__contains=skill.strip()):
-            if not any(x.id == e.id for x in members):
-                members.append(Member(
-                    e.id,
-                    e.name_first, 
-                    e.name_last, 
-                    e.skills.split(','),
-                    e.bpt_confidence,
-                    e.bpt_delegator,
-                    e.bpt_determination,
-                    e.bpt_disruptor,
-                    e.bpt_independence,
-                    e.bpt_knowledge,
-                    e.bpt_profitability,
-                    e.bpt_relationship,
-                    e.bpt_risk,
-                    e.bpt_selling
-                    )
-                )
+
+    skillList = skills.split(",")
+    masterEmployeeList = list(Employee.objects.filter(skills__contains=skillList[0].strip()))
+    for skill in skillList[1:]:
+        employeeList = list(Employee.objects.filter(skills__contains=skill.strip()))
+        for employee in masterEmployeeList:
+            if employee not in employeeList:
+                masterEmployeeList.remove(employee)
+    
+    for e in masterEmployeeList:
+        members.append(Member(
+            e.id,
+            e.name_first, 
+            e.name_last, 
+            e.skills.split(','),
+            e.bpt_confidence,
+            e.bpt_delegator,
+            e.bpt_determination,
+            e.bpt_disruptor,
+            e.bpt_independence,
+            e.bpt_knowledge,
+            e.bpt_profitability,
+            e.bpt_relationship,
+            e.bpt_risk,
+            e.bpt_selling
+            )
+        )
+
 
     members.sort(reverse=True)
     
     # Building a possible team
     possible = Team()
-    for i in range(teamSize):
-        possible.add(members[i])
-    
-    # Checking to make sure the team is above threshold value
-    
-    #print(possible)
-
-
-    # print(f"I was passed teamSize:{teamSize} and skills: {skills}")
-    # for i in range(teamSize):
-    #     print(f"{members[i].total} {members[i].skills} ")
-    
-    
-    
-    # Return a list of the ID's of the team members.
     if len(members) > teamSize:
-        return [r.id for r in members[0:teamSize]]
+        for i in range(teamSize):
+            possible.add(members[i])
+        
+        # Checking to make sure the team is above thresholds
+        for i in range(teamSize-1, len(members)):
+            if not possible.isValid():
+                possible.remove(members[i])
+                if i+1 < len(members):
+                    possible.add(members[i+1])
+            else:
+                return possible.ids
     else:
-        return [r.id for r in members]
+        for i in members:
+            possible.add(i)
+        return possible.ids
 
 class Member:
     def __init__(
@@ -213,9 +228,13 @@ class Member:
     
     def __lt__(self, other):
         return self.total < other.total
+    
+    def __str__(self) -> str:
+        return str(self.id)
 
 class Team:
     def __init__(self) -> None:
+        self.ids = []
         self.confidence = 0
         self.delegator = 0
         self.determination = 0
@@ -229,6 +248,7 @@ class Team:
         self.size = 0
     
     def add(self, member: Member) -> None:
+        self.ids.append(member.id)
         self.confidence += member.confidence
         self.delegator += member.delegator
         self.determination += member.determination
@@ -242,6 +262,7 @@ class Team:
         self.size += 1
     
     def remove(self, member: Member) -> None:
+        self.ids.remove(member.id)
         self.confidence -= member.confidence
         self.delegator -= member.delegator
         self.determination -= member.determination
@@ -254,7 +275,7 @@ class Team:
         self.selling -= member.selling
         self.size -= 1
     
-    def isValid(self, threshold:float) -> bool:
+    def isValid(self) -> bool:
         ConfidenceThreshold = .42
         DelegatorThreshold = .50
         DeterminationThreshold = .56
@@ -288,7 +309,7 @@ class Team:
         return True
 
     def __str__(self):
-        rStr = ""
+        rStr = str(self.ids)+"\n"
         rStr += f"confidence:    {self.confidence/self.size}\n"
         rStr += f"delegator:     {self.delegator/self.size}\n"
         rStr += f"determination: {self.determination/self.size}\n"
