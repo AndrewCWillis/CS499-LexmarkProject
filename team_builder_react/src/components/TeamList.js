@@ -50,7 +50,7 @@ const TeamList = ({names, team, setScores}) =>{
             }
         });
         var scoresAvg = []
-        Object.keys(newScores).forEach( key => scoresAvg.push(newScores[key] / team_Length))//compute average for each talent
+        Object.keys(newScores).forEach( key => scoresAvg.push((newScores[key] / team_Length) * 100))//compute average for each talent
         setScores(scoresAvg)
     }
 
