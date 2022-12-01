@@ -13,6 +13,8 @@ const Home = () => {
                     if (axios.isAxiosError(team)){ //check if the response is an error
                         setError(team.toString()) //update the view and display to user
                         document.getElementById("ErrorMessage").className = "text-danger visible"//reveal the Alert component
+                    } else {
+                        document.getElementById("ErrorMessage").className = "text-danger invisible"//hide the Alert component
                     }
                 });
     return (

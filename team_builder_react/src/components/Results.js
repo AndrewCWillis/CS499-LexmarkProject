@@ -64,7 +64,7 @@ const Results = ({techList, num}) => {
       var scoresAvg = []
       //SAVE THE RESULTS AS STATES TO UPDATE THE VIEW
       //          VVVV
-      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team_Length))//compute average for each talent
+      Object.keys(scoresTemp).forEach( key => scoresAvg.push((scoresTemp[key] / team_Length) * 100))//compute average for each talent
       setTeamLength(team_Length)
       setNames(temp)
       setScores(scoresAvg)
