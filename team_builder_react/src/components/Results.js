@@ -64,7 +64,7 @@ const Results = ({techList, num}) => {
       var scoresAvg = []
       //SAVE THE RESULTS AS STATES TO UPDATE THE VIEW
       //          VVVV
-      Object.keys(scoresTemp).forEach( key => scoresAvg.push(scoresTemp[key] / team_Length))//compute average for each talent
+      Object.keys(scoresTemp).forEach( key => scoresAvg.push((scoresTemp[key] / team_Length) * 100))//compute average for each talent
       setTeamLength(team_Length)
       setNames(temp)
       setScores(scoresAvg)
@@ -77,7 +77,6 @@ const Results = ({techList, num}) => {
         setFirstTime(true)
         SendTeamParameters(num, techList)
         .then((response) => {
-          console.log(response)
           if (! axios.isAxiosError(response)){ // we know that the response is not an error
 
             GetValidTeam(response.data.id)
@@ -112,6 +111,12 @@ const Results = ({techList, num}) => {
             text: 'Generated Team',
           },
         },
+        scales: { // https://www.chartjs.org/docs/latest/axes/#tick-configuration:~:text=Copied!-,In%20contrast%20to%20the,-suggested*%20settings
+          y: {
+            min: 0,
+            max: 100
+          }
+        }
       };
       
       var data = {

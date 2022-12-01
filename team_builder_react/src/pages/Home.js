@@ -24,7 +24,7 @@ const Home = () => {
                 <Button className="mx-auto my-auto" variant="primary" href='/build'>Build a Team</Button>
             </Stack>
             <div className="col-md-5 mx-auto my-auto h-100 invisible" id="ErrorMessage">
-                <Alert variant={"danger"}>{error}. Verify that the back-end server is running. See the github page for instructions.</Alert>
+                <Alert variant={"danger"}>{error}. Verify that the back-end server is running. See the github page for instructions. Refresh the page when you have have fixed this to check the status again.</Alert>
             </div> 
         </>
     );

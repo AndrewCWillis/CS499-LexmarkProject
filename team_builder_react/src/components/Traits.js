@@ -122,13 +122,13 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndRespo
 
                 // For each trait we found, check that it is numeric
                 parsedTraits.forEach((trait) => {
-                    // If the trait score is not a number [0, 100], say that we cannot parse it
-                    if (typeof(trait.score) !== 'number' || trait.score < 0 || trait.score > 100) {
+                    // If the trait score is not a number [0, 1], say that we cannot parse it
+                    if (typeof(trait.score) !== 'number' || trait.score < 0 || trait.score > 1) {
                         traitScoreError = true;
                         parsedTraits = [] // reset the traits array
 
                         document.getElementById("TraitsErrorMessage").className = "text-danger visible";
-                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value [0, 100] for one or more of the BP10 traits for the previously inputted name.";
+                        document.getElementById("TraitsErrorMessage").innerText = "Could not find a numeric value [0, 1] for one or more of the BP10 traits for the previously inputted name.";
                         document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
                         
                         return;
@@ -144,7 +144,7 @@ const Traits = ({ setIsOnSkills, setIsOnFile, person, setPerson, setBackEndRespo
         */
         if (!foundMatch && !traitScoreError) {
             document.getElementById("TraitsErrorMessage").className = "text-danger visible";
-            document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found.";
+            document.getElementById("TraitsErrorMessage").innerText = "Previously inputted name could not be found in the csv.";
             document.getElementById("react-csv-reader-input").className = "form-control is-invalid";
         } else if (foundMatch && !traitScoreError){
             document.getElementById("TraitsErrorMessage").className = "text-danger invisible";
