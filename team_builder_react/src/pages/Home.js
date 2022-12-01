@@ -13,8 +13,6 @@ const Home = () => {
                     if (axios.isAxiosError(team)){ //check if the response is an error
                         setError(team.toString()) //update the view and display to user
                         document.getElementById("ErrorMessage").className = "text-danger visible"//reveal the Alert component
-                    } else {
-                        document.getElementById("ErrorMessage").className = "text-danger invisible"//hide the Alert component
                     }
                 });
     return (
@@ -26,7 +24,7 @@ const Home = () => {
                 <Button className="mx-auto my-auto" variant="primary" href='/build'>Build a Team</Button>
             </Stack>
             <div className="col-md-5 mx-auto my-auto h-100 invisible" id="ErrorMessage">
-                <Alert variant={"danger"}>{error}. Verify that the back-end server is running. See the github page for instructions.</Alert>
+                <Alert variant={"danger"}>{error}. Verify that the back-end server is running. See the github page for instructions. Refresh the page when you have have fixed this to check the status again.</Alert>
             </div> 
         </>
     );
