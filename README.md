@@ -49,7 +49,20 @@ Open a new terminal in the team_builder_react directory and call the following c
 If you receive an error `'react-scripts' is not recognized as an internal or external command`, you can fix this via
     
     npm install react-scripts --save
+
+# Viewing the API
+Once the django server is running, via the 'python manage.py runserver' command, the API will have a web portal useful for visualizing, and testing functionality. This project has three APIs, accessible at the following addresses. While GET requests can be executed with just the URL, this web portal allows for bodies of POST requests to be defined without using a client such as POSTMAN or ARC.
+
+    http://127.0.0.1:8000/employees
+    http://127.0.0.1:8000/requested_teams/
+    http://127.0.0.1:8000/sent_teams/
+
+# Admin
+Django automatically creates an admin portal, accessible at ' http://127.0.0.1:8000/admin'. This allows the inspection of the entire database, and is useful for verifying the presence of certain records, or the creation of new records. The credentiuals to access the admin portal are below.
     
+    username: admin
+    password: 499
+
 # Collaboration
 ### Adding Python Libraries & Dependencies
 
