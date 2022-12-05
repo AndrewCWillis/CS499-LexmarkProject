@@ -50,7 +50,7 @@ If you receive an error `'react-scripts' is not recognized as an internal or ext
     
     npm install react-scripts --save
     
-# Colaboration
+# Collaboration
 ### Adding Python Libraries & Dependencies
 
 Make sure the `py_venv` is activated, then use `python -m pip install <dependency_name>` to install your library. Finally update the `py_requirements` file, using `python -m pip freeze > py_requirements.txt`
