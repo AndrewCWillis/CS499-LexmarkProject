@@ -22,7 +22,8 @@ class TestAlgorithm(unittest.TestCase):
         self.testSkills.append("testSkill")
     
     def test_RequestTwoReturnOne(self):
-        # This should return only the one member with the "testSkill" skill
+        # Description:  This should return only the one member with the "testSkill" skill
+        # Severity:     Critical, if you return more than were asked for, it is an error.  Fewer is fine (ex. if not enough were found in Database)
         pID = self._makePerson("test", "tester", self.testSkills)               # Making one person with the "testSkill" skill and dding them to the database
 
         team = self._getTeam(2, self.testSkills)                                # Requesting a team size of 2 with the "testSkill" skill
@@ -30,10 +31,11 @@ class TestAlgorithm(unittest.TestCase):
         self.assertEqual(team[0], pID)                                          # Ensuring that the one person on the team is the one we generated
 
     def test_ReturnTheBestTwo(self):
-        # After generating three otherwise identical people, and requesting two, it should return the two with the highest traits
-        p1 = self._makePerson("p1", "p1", self.testSkills) # Defaults to .5 across
-        p2 = self._makePerson("p2", "p2", self.testSkills, .6,.6,.6,.6,.6,.6,.6,.6,.6,.6)
-        p3 = self._makePerson("p3", "p3", self.testSkills, .7,.7,.7,.7,.7,.7,.7,.7,.7,.7)
+        # Description:  After generating three otherwise identical people, and requesting two, it should return the two with the highest traits
+        # Severity:     Critical.  If this doesn't return the correct members, you will get sub-optimal teams
+        p1 = self._makePerson("p1", "p1", self.testSkills) #( Defaults to .5 across     )     Not me, i'm less than p2's total values
+        p2 = self._makePerson("p2", "p2", self.testSkills, .6,.6,.6,.6,.6,.6,.6,.6,.6,.6)   # Keep me
+        p3 = self._makePerson("p3", "p3", self.testSkills, .7,.7,.7,.7,.7,.7,.7,.7,.7,.7)   # Keep me
 
         team = self._getTeam(2, self.testSkills)
         self.assertNotIn(p1, team)
@@ -41,11 +43,13 @@ class TestAlgorithm(unittest.TestCase):
         self.assertIn(p3, team)
     
     def test_GetNextBest(self):
-        # If you have three people and they don't cover down on all categories, take the next best person
-        p1 = self._makePerson("p1", "p1", self.testSkills, .6,.6,.6,.6,.6,.6,.6,.6,.6,.7)
-        p2 = self._makePerson("p2", "p2", self.testSkills, .7,.7,.7,.7,.7,.7,.7,.7,.7,.2)
-        p3 = self._makePerson("p3", "p3", self.testSkills, .8,.8,.8,.8,.8,.8,.8,.8,.8,.1)
-        p4 = self._makePerson("p4", "p4", self.testSkills, .9,.9,.9,.9,.9,.9,.9,.9,.9,.1)
+        # Description:  If you have three people and they don't cover down on all categories, take the next best person
+        # Severity:     Minor.  A good team is still returned, though there may be blind spots.  Very subjective based on what the user wants.
+        #               Future versions of the algorithm will most likely depend on user input to determine this sort of priority scheme.
+        p1 = self._makePerson("p1", "p1", self.testSkills, .6,.6,.6,.6,.6,.6,.6,.6,.6,.7)   # Keep me ( (.1+.7)/2 on last trait is > .4 average min)
+        p2 = self._makePerson("p2", "p2", self.testSkills, .7,.7,.7,.7,.7,.7,.7,.7,.7,.2)   # Skip Me ( (.1+.2)/2 on last trait is < .4 average min)
+        p3 = self._makePerson("p3", "p3", self.testSkills, .8,.8,.8,.8,.8,.8,.8,.8,.8,.1)   # Skip Me ( (.1+.1)/2 on last trait is < .4 average min)
+        p4 = self._makePerson("p4", "p4", self.testSkills, .9,.9,.9,.9,.9,.9,.9,.9,.9,.1)   # Keep Me (at .1 on last trait)
 
         team = self._getTeam(2, self.testSkills)
         self.assertNotIn(p2, team)

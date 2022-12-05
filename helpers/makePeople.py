@@ -13,6 +13,8 @@ from random import randint, random
 from scipy.stats import truncnorm
 
 def computeTrait(traitAverage:float) -> float:
+    # This function creates a randomly generated trait value given the trait's national average, using a
+    #   normal distribution to give reasonable values
     lower = 0
     upper = 1
 
