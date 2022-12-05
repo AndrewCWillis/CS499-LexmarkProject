@@ -7,6 +7,7 @@ from rest_framework.response import *
 from rest_framework import status as httpStatus
 from . serializer import *
 
+from . teamAlgorithm import createValidTeams
 
 # Begin API specifications
 # Employees API 
@@ -155,6 +156,7 @@ class SentTeams(APIView):
             if serializer.is_valid(raise_exception=True):
                 serializer.save()
             return Response(serializer.data)
+<<<<<<< HEAD
 # End API specifications
 
 def createValidTeams(teamSize: int, skills: str) -> list:
@@ -341,3 +343,5 @@ class Team:
     
     def __len__(self):
         return self.size
+=======
+>>>>>>> algorithm

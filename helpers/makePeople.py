@@ -1,4 +1,14 @@
-import json
+# =================================================================================================
+# Author:   Alexander Barrera
+# File:     makePeople.py
+# Purpose:  This file populates the database with dummy data.  The values follow a normal distribution
+#           given national averages.
+# How-to:   To use this file, start up the backend (see instructions here: 
+#           https://github.com/AndrewCWillis/CS499-LexmarkProject).  Once the backend is up, run
+#           python3 makePeople.py
+#           From the directory that holds this file.  If you want to add a different number of people 
+#           to the database, change the line that says: data = getNames(250) to a number other than 250.
+# =================================================================================================
 from random import randint, random
 from scipy.stats import truncnorm
 
@@ -49,6 +59,7 @@ def getNames(howMany:int) -> list[dict]:
         # ----------------------------------
 
         # ------------- Traits -------------
+        # Current national averages are below.  They're taken from the traitAverages.txt file in this directory.
         # Confidence = .42
         # Delegator = .50
         # Determination = .56

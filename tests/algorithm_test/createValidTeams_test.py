@@ -1,3 +1,11 @@
+# =================================================================================================
+# Author:   Alexander Barrera
+# File:     createValidTeams_test.py
+# Purpose:  This file tests the site's algorithm functionality
+# How-to:   To use this file, start up the backend (see instructions here: 
+#           https://github.com/AndrewCWillis/CS499-LexmarkProject).  Once the backend is up, run
+#           pytest createValidTeams_test.py in this directory.
+# =================================================================================================
 import requests
 import unittest
 
@@ -10,6 +18,7 @@ class TestAlgorithm(unittest.TestCase):
     testSkills = []
 
     def setUp(self):
+        # Default setup method.  Inserts the "testSkill" skill into the desired employee's skills list.
         self.testSkills.append("testSkill")
     
     def test_RequestTwoReturnOne(self):
@@ -45,6 +54,7 @@ class TestAlgorithm(unittest.TestCase):
         self.assertIn(p4, team)
 
     def tearDown(self):
+        """ Default teardown function to clean up the database once we're done testing """
         for empID in self.testEmployeeIds:
             data = {"id": empID}
             self._send(employee_URL, data, type="delete")
@@ -52,12 +62,17 @@ class TestAlgorithm(unittest.TestCase):
     
     def _getTeam(self, teamSize:int, skills:list) -> list:
         """ Mimics the frontend's team request: given a size and a list of skills, returns a list of employee id's"""
-        data = {"teamSize": teamSize, "skills": self._collapseTestSkills(skills)}
+        data = {"teamSize": teamSize, "skills": ",".join(skills).rstrip(",")}
         resp = self._send(requested_teams_URL, data, type="post")
+        if resp is None or "id" not in resp.keys():
+            return []
         resp = self._send(sent_teams_URL, {"id": resp["id"]}, type="get")
+        if resp is None or "team" not in resp.keys():
+            return []
         return resp['team']
 
-    def _send(self, url:str, data:dict, type="post"):
+    def _send(self, url:str, data:dict, type:str = "post"):
+        """ Sends the get, post and delete requests (defaults to post).  When successful, returns the json response """
         if type == "post":
             response = requests.post(url, json=data)
         elif type == "get":
@@ -79,7 +94,7 @@ class TestAlgorithm(unittest.TestCase):
                 return response
 
     def _makePerson(self, first:str, last:str, skills:list, conf:float = 0.5, dele:float = 0.5, dete:float = 0.5, disr:float = 0.5, inde:float = 0.5, know:float = 0.5, prof:float = 0.5, rela:float = 0.5, risk:float = 0.5, sell:float = 0.5) -> int:
-        """ Creates a person with the given traits and inserts them into the database.  Returns the database id (int)."""
+        """ Creates a person with the given traits and inserts them into the database.  Returns the database id (int), or -1 on failure."""
         data = {
                 "name_first":first[0].upper() + first[1:].lower(), 
                 "name_last":last[0].upper() + last[1:].lower(), 
@@ -96,15 +111,11 @@ class TestAlgorithm(unittest.TestCase):
                 "bpt_selling": sell
         }
         resp = self._send(employee_URL, data)
+        if resp is None or "id" not in resp.keys():
+           return -1 
         pID = resp["id"]
         self.testEmployeeIds.append(pID)
         return pID
-    
-    def _collapseTestSkills(self, skills:list[str]) -> str:
-        retStr = ""
-        for skill in skills:
-            retStr += skill + ","
-        return retStr.rstrip(",")
 
 if __name__ == '__main__':
     unittest.main()
